@@ -1,0 +1,12 @@
+# Ignora archivos del sistema Mac 
+.DS_store
+
+# Ignora los archivos de compilacion y linkedicion
+*.bin
+*.sys
+*.o
+
+# Ignora los archivos imágenes
+*.img
+*.qcow2
+*.vmdk
