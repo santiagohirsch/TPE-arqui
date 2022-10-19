@@ -12,6 +12,7 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
+GLOBAL _irq10Handler
 GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler
@@ -139,6 +140,9 @@ _irq04Handler:
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5
+
+_irq10Handler:
+	irqHandlerMaster 10
 
 ;Syscall
 _irq80Handler:

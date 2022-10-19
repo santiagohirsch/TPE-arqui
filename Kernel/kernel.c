@@ -7,6 +7,7 @@
 #include <idtLoader.h>
 #include <time.h>
 #include <defs.h>
+#include <naiveGraphicsConsole.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -101,70 +102,10 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	ncClear();
-	/*
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
-
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("[Finished]");
-	ncNewline();
-	*/
-	ncPrintTextColor("Arquitectura de las Computadoras", WHITE, GREEN);
-	ncNewline();
-	ncPrintDec(getFormat(_NRTCGetHours()));
-	ncPrint(":");
-	ncPrintDec(getFormat(_NRTCGetMins()));
-	ncPrint(":");
-	ncPrintDec(getFormat(_NRTCGetSeconds()));
-	ncNewline();
-	while(seconds_elapsed() <= 5){
-		; //Espero 5 segundos para que se pueda ver lo que esta impreso
-	}
-	ncClear();
-	int secondsAnt = -1;
-	int seconds;
-	while(seconds_elapsed() <= 15){
-		seconds = seconds_elapsed();
-		if (seconds % 5 == 0 && secondsAnt != seconds){
-			ncPrint("Imprimiendo nuevo mensaje ");
-			ncPrintDec(seconds);
-			ncNewline();
-			secondsAnt = seconds;
-		}
-	}
-	ncClear();
-	char * stdout = "stdout";
-	char * stderr = "stderr";
-	sys_write(1, stdout, _strlen(stdout));
-	ncNewline();
-	sys_write(2, stderr, _strlen(stderr));
-	while(seconds_elapsed() <= 5 + seconds){
-		; //Espero 5 segundos para que se pueda ver lo que esta impreso
-	}
-	seconds = seconds_elapsed();
-	ncClear();
-	ncPrint("Cuando se borre este mensaje vas a tener libertad de escribir lo que quieras,");
-	ncNewline();
-	ncPrint("tenes que terminar la ejecucion a mano");
-	while(seconds_elapsed() <= 5 + seconds){
-		; //Espero 5 segundos para que se pueda ver lo que esta impreso
-	}
-	ncClear();
+	ngc_printChar('h');
+	ngc_printChar('o');
 	while(1){
-		;
+		
 	}
 	return 0;
 }

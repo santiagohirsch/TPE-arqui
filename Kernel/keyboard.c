@@ -1,5 +1,5 @@
 #include <keyboard.h>
-#include <naiveConsole.h>
+#include <naiveGraphicsConsole.h>
 #include <stdint.h>
 
 static const uint8_t charHexMap[256] = 
@@ -15,7 +15,7 @@ void keyboard_handler(){
     uint64_t i=tKey();
 	uint64_t teclahex=i;
     if (teclahex < 0x53){
-        ncPrintChar(charHexMap[teclahex]);
+        ngc_printChar(charHexMap[teclahex]);
     }
 	
 }

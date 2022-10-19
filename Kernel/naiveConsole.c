@@ -5,8 +5,8 @@
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 static char buffer[64] = { '0' };
-static uint8_t * const video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
+static uint8_t * const video = (uint8_t*)0xB8000; 	// 0xB8000 -> TEXT
+static uint8_t * currentVideo = (uint8_t*)0xB8000;	// 0xA0000 -> GRAPHICS
 static const uint32_t width = 80;
 static const uint32_t height = 25 ;
 
@@ -17,7 +17,6 @@ static int checkAttribute(int background, int foreground){
 void ncPrint(const char * string)
 {
 	int i;
-
 	for (i = 0; string[i] != 0; i++)
 		ncPrintChar(string[i]);
 }
@@ -145,3 +144,10 @@ void write(unsigned int fd, char *buf, int count){
 		}
 	}
 }
+
+	 void putpixel(/*unsigned char* screen,*/ int x,int y, int color) {
+		unsigned where = x*/*pixelwidth*/1 + y*/*pitch*/1;
+		video[where] = color & 255;              // BLUE
+		video[where + 1] = (color >> 8) & 255;   // GREEN
+		video[where + 2] = (color >> 16) & 255;  // RED
+	}
