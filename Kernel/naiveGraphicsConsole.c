@@ -14,7 +14,7 @@ struct vbe_mode_info_structure {
     uint32_t win_func_ptr;      // deprecated; used to switch banks from protected mode without returning to real mode
     uint16_t pitch;         // number of bytes per horizontal line
     uint16_t width;         // width in pixels
-    uint16_t height;            // height in pixels
+    uint16_t height;        // height in pixels
     uint8_t w_char;         // unused...
     uint8_t y_char;         // ...
     uint8_t planes;
@@ -83,6 +83,8 @@ void ngc_printChar(char c) {
         ngc_printNewline();
 }
 
+//ngc_clean == ngc_scroll(UP)
+
 void ngc_printNewline(void) {
     penX = 0; // pen x is set to full left.
 
@@ -90,10 +92,22 @@ void ngc_printNewline(void) {
     if (penY + (2*CHAR_HEIGHT) <= screenData->height) {
         penY += CHAR_HEIGHT;
     } else {
+
+        // dst: posicion de inicio de la pantalla
         void* dst = (void*)((uint64_t)screenData->framebuffer);
+
+        // src: ultima posicion de la pantalla 
+        // (3 por rgb, CHAR_HEIGHT es el tamaño de cada linea, width es el ancho de la pantalla)
         void* src = (void*)(dst + 3 * (CHAR_HEIGHT * (uint64_t)screenData->width));
+        
+        // len: selecciona toda la pantalla menos la ultima linea
+        // 3 por rgb, width es el ancho, height - CHAR_HEIGHT es todas las lineas excepto la ultima
         uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height - CHAR_HEIGHT));
+        
+        // copia todas las lineas menos la ultima
         memcpy(dst, src, len);
+
+        // setea desde dst + len hasta dst (atras para adelante) en 0
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
 }
