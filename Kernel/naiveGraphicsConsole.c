@@ -104,10 +104,11 @@ void ngc_printNewline(void) {
         // 3 por rgb, width es el ancho, height - CHAR_HEIGHT es todas las lineas excepto la ultima
         uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height - CHAR_HEIGHT));
         
-        // copia todas las lineas menos la ultima
+        /*
+            este bloque copia todo lo escrito en pantalla a una linea mas arriba
+            y deja la posicion para escribir en la ultima linea
+        */
         memcpy(dst, src, len);
-
-        // setea desde dst + len hasta dst (atras para adelante) en 0
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
 }
