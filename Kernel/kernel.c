@@ -56,7 +56,7 @@ int main()
 	//carga
 	load_idt();
 
-	//((EntryPoint)sampleCodeModuleAddress)();
+	((EntryPoint)sampleCodeModuleAddress)();
 	
 	while(1){
 		_hlt(); //espera: instrucc q frena cpu hasta recibir interrup externas (HW)
