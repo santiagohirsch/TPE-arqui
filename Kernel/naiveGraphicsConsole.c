@@ -141,10 +141,12 @@ static void delete_last_char() {
     else {
 
         penX -= CHAR_WIDTH;
-        
+
         Color aux = {0,0,0};
 
+        
         for (int h=0; h<16; h++) {
+            // se llenan todos los pixeles del ultimo char en {0,0,0}
     		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
     	    pos[0] = aux;
     		pos[1] = aux;
@@ -154,19 +156,8 @@ static void delete_last_char() {
     		pos[5] = aux;
     		pos[6] = aux;
             pos[7] = aux;
-    		pos[8] = aux;
+    		pos[8] = aux; // resetteo el espaciado aunque ya este seteado
     	}
-               
-             
-
-        // QUIERO COPIAR LA ULTIMA LINEA Y BORRARLE EL ULTIMO CHAR
-
-        void * complete_lines = (void *)(3 * penY * (uint64_t)screenData->width);
-        void * last_line = 3 * CHAR_HEIGHT * penX;
-
-        // copio la ultima linea en 
-        //memcpy(penY, complete_lines + last_line, CHAR_HEIGHT * penX);
-        //memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
     
 }
