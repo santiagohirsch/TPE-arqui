@@ -15,6 +15,8 @@ typedef struct {
 } Color;
 
 
+
+void print(char * string);
 void ngc_printNewline(void);
 
 #endif
