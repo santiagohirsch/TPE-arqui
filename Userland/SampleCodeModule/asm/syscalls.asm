@@ -3,8 +3,10 @@ GLOBAL sys_read
 
 section .text
 sys_read:
-    mov rax, 0
-    int 80h
+    mov rax, 0x00
+    syscall
+    ret
 sys_write:
-    mov rax, 1
+    mov rax, 0x01
     int 80h
+    ret

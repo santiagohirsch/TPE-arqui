@@ -144,9 +144,17 @@ _irq05Handler:
 
 ;Syscall
 _irq80Handler:
-	;Syscall params: rax rdi rsi rdx r10 r8	r9
-	;C params: rax rdi rsi rdx r10 r8 r9
+	;Syscall params: rdi rsi rdx r10 r8	r9
+	;C params: rdi rsi rdx rcx r8 r9
+	push rbp
+	mov rbp, rsp
+	mov rcx, r10
+	mov r9, rax
 	call syscallDispatcher
+	
+	mov rsp, rbp
+	pop rbp
+	iretq
 
 ;Zero Division Exception
 _exception0Handler:
