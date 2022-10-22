@@ -1,56 +1,111 @@
-// DUDASSS: aca van funciones en part o llamamos a kernel?
-//#define LENGTH_PARAMETERS
-//#define BUFFER_LENGTH 
-// EXCEPCIONES ACAA!! : division por cero y codigo d op invalido
-/* dsps brancheo y las copio ahi mauro no me retes
-static void divideByZero(){ //=> hay q dividir ..?
+#include <libVid.h>
+#include <stdint.h>
 
+#define MAX_PARAMETERS 10
+#define LENGTH_PARAMETERS 20
+#define BUFFER_LENGTH 20
+#define COMMANDS_LENGTH 9
+
+/* COMMANDS */
+static void help(){
+	
 }
+
+static void screenshot(){
+	
+}
+
 static void invalidOPCode(){
 
 }
-*/
 
-/*
-static void commandHelp(){
-	if (cantParams != 0){
-		wrongOPCodeexception();
-	}
-	run_help();
+static void divideByZero(){ 
+
 }
 
-static void commandRTC(){
-	run_RTC();
-}*/
+static void inforeg(){
+	
+}
+
+static void printMem(uint64_t memDirec){
+	
+}
 
 
-//static const char* commands[] = {"clear", "divideandconquer", "dividebyzero", "fractal", "help", "inforeg", "invalidopcode", "printmem", "time"};
-//static void (*commands_functions[])(char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {clear, divideAndConquer, divideByZero, fractal, help, inforeg, invalidOPCode, printMem, time};
+static void time(){
+	
+}
 
-#include <libVid.h>
+
+static void changeFontSize(char setting){
+	
+}
+
+static void tron(){
+	
+}
+
+
+//iria aca ?
+static int strcmp(char *str1, char *str2){
+	while( ( *str1 != '\0' && *str2 != '\0' ) && *str1 == *str2 )
+    {
+        str1++;
+        str2++;
+    }
+
+    if(*str1 == *str2)
+    {
+        return 0; // strings are identical
+    }
+
+    else
+    {
+        return *str1 - *str2;
+    }
+}
+static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
+static void (*commands_functions[])(char parameters[COMMANDS_LENGTH][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
+
+
+
+static int findIdxCommand(char *buff){
+	for (int i = 0; i < COMMANDS_LENGTH ; i++){
+		if ( strcmp(buff,commands[i]) == 0 ){
+			return i;
+		}
+	}
+	return -1; //command not found
+}
 
 int main() {
-	/*
-	>>
-	$> help
 
-	array de strings  (tron, screenshot, rtc, checkExcep, screenshot , inforeg, post32, changeFontSize, etc )
-	$> rtc
-	hora del dia
-	$> tron
-	limpia la pantalla y la ocupa con el tron
-	*/
+	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
+	//Es decir printf, scanf, etc
 
-	//hacer el print
-	print("bienvenido: type help for options");
+	print("Welcome: type 'help' for options");
+	print("\n");
+	print("$>");
 	while(1){
-		//inicializar vec d comandos ??
-
+		// usuario escribe comando -> paso a idx: lo busco en mi arrays cual es y ejecuto
+		
 		//buffer para ver q comando me manda
-		//char buff_command[BUFFER_LENGTH] = {0};
-		//scan(buff_command,BUFFER_LENGTH); -> hay q hacerlo nosotros :) :)  
+		char buff_command[BUFFER_LENGTH] = {0};
+		scan(buff_command, BUFFER_LENGTH);  
+
+		// paso a idx (fun aux)
+		int idx = findIdxCommand(buff_command);
+		if ( idx != -1){
+			//busco en mi array
+			// LE PASO PARAMETROS: VER COMO RECIBO
+			print("Lo encontro!");
+			//char parameters[COMMANDS_LENGTH][LENGTH_PARAMETERS];
+			//commands_functions[idx](parameters);
+		}
+		else{
+			print("Command not found: try again");
+		}
 		  
-		 
 	}
 	return 0;
 	
