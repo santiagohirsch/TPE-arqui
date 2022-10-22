@@ -1,5 +1,6 @@
 #include <syscalls.h>
 #include <libVid.h>
+#include <stdint.h>
 
 static int _strlen(const char * str){
 	int ans = 0;
@@ -13,6 +14,10 @@ static int _strlen(const char * str){
 void print(const char *buffer){
     //lamo al syswrite 1=stdout
     sys_write(STDOUT, buffer, _strlen(buffer));
+}
+
+void scan(char * buffer, uint64_t length){
+	sys_read(STDIN, buffer, length);
 }
 /*
 void scanf(char* buffer, int length){
