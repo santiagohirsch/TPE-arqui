@@ -102,8 +102,6 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	ngc_printChar('h');
-	ngc_printChar('o');
 	while(1){
 		
 	}
