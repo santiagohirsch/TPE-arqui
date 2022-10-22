@@ -32,11 +32,11 @@ void load_idt() {
     setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
     
 
-	//Solo interrupcion timer tick habilitadas (0xFE en masterMask)
-  //Para habilitar las interrupciones de teclado 0xFD en masterMask
-  //Para habilitar ambas 0xFC en masterMask
-	picMasterMask(0xFC);  
-	picSlaveMask(0xFF);  
+	// Solo interrupcion timer tick habilitadas (0xFE en masterMask)
+  // Para habilitar las interrupciones de teclado 0xFD en masterMask
+  // Para habilitar ambas 0xFC en masterMask
+	picMasterMask(0xFC);
+	picSlaveMask(0xFF);
         
 	_sti();
 }
