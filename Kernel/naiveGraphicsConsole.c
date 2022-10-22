@@ -72,6 +72,7 @@ void ngc_printChar(char c) {
 	    const char* data = font + 32*(c-33);
 	    for (int h=0; h<16; h++) {
     		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
+            // si el bit en cada posicion esta prendido: pinto, sino dejo
     		if (*data & 0b00000001) pos[0] = penColor;
     		if (*data & 0b00000010) pos[1] = penColor;
     		if (*data & 0b00000100) pos[2] = penColor;
@@ -81,6 +82,7 @@ void ngc_printChar(char c) {
     		if (*data & 0b01000000) pos[6] = penColor;
     		if (*data & 0b10000000) pos[7] = penColor;
     		data++;
+            // salteo un pixel para espacear
     		if (*data & 0b00000001) pos[8] = penColor;
     		data++;
     	}
@@ -109,7 +111,7 @@ void ngc_printNewline(void) {
         // (3 por rgb, CHAR_HEIGHT es el tamaño de cada linea, width es el ancho de la pantalla)
         void* src = (void*)(dst + 3 * (CHAR_HEIGHT * (uint64_t)screenData->width));
         
-        // len: selecciona toda la pantalla menos la ultima linea
+        // len: cantidad de pixeles en toda la pantalla menos la ultima linea
         // 3 por rgb, width es el ancho, height - CHAR_HEIGHT es todas las lineas excepto la ultima
         uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height - CHAR_HEIGHT));
         
@@ -137,7 +139,34 @@ static void delete_last_char() {
     }
     // caso: Delete last char
     else {
-        ngc_printNewline();
+
+        penX -= CHAR_WIDTH;
+        
+        Color aux = {0,0,0};
+
+        for (int h=0; h<16; h++) {
+    		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
+    	    pos[0] = aux;
+    		pos[1] = aux;
+    		pos[2] = aux;
+    		pos[3] = aux;
+    		pos[4] = aux;
+    		pos[5] = aux;
+    		pos[6] = aux;
+            pos[7] = aux;
+    		pos[8] = aux;
+    	}
+               
+             
+
+        // QUIERO COPIAR LA ULTIMA LINEA Y BORRARLE EL ULTIMO CHAR
+
+        void * complete_lines = (void *)(3 * penY * (uint64_t)screenData->width);
+        void * last_line = 3 * CHAR_HEIGHT * penX;
+
+        // copio la ultima linea en 
+        //memcpy(penY, complete_lines + last_line, CHAR_HEIGHT * penX);
+        //memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
     
 }
