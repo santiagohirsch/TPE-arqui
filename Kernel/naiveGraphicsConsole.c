@@ -70,6 +70,7 @@ void ngc_printChar(char c) {
     } else
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
 	    const char* data = font + 32*(c-33);
+        // cambiando h: cambio tam
 	    for (int h=0; h<16; h++) {
     		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
             // si el bit en cada posicion esta prendido: pinto, sino dejo
@@ -93,7 +94,11 @@ void ngc_printChar(char c) {
         ngc_printNewline();
 }
 
-//ngc_clean == ngc_scroll(UP)
+void ngc_print(char * string){
+    for(int i = 0; string[i]!= '\0';i++){
+        ngc_printChar(string[i]);
+    }
+}
 
 void ngc_printNewline(void) {
     lastPenX = penX;

@@ -19,7 +19,7 @@ GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
-EXTERN write
+EXTERN syscallDispatcher
 
 SECTION .text
 
@@ -141,20 +141,12 @@ _irq04Handler:
 _irq05Handler:
 	irqHandlerMaster 5
 
-_irq10Handler:
-	irqHandlerMaster 10
 
 ;Syscall
 _irq80Handler:
-	push rbp
-    mov rbp, rsp   
-    cmp rax, 1
-	jne .continue
-	call write
-	.continue
-	mov rsp, rbp
-	pop rbp
-    iretq
+	;Syscall params: rax rdi rsi rdx r10 r8	r9
+	;C params: rax rdi rsi rdx r10 r8 r9
+	call syscallDispatcher
 
 ;Zero Division Exception
 _exception0Handler:
