@@ -41,15 +41,19 @@ struct vbe_mode_info_structure {
     uint8_t reserved1[206];
 } __attribute__ ((packed));
 
-
-
 struct vbe_mode_info_structure* screenData = (void*)0x5C00;
 
+
+//    STATIC METHODS DECLARATION
+//
 static void* getPtrToPixel(uint16_t x, uint16_t y) {
     return (void*)(screenData->framebuffer + 3 * (x + (y * (uint64_t)screenData->width)));
 }
 
+static void delete_last_char();
+
 uint16_t penX = 0, penY = 0;
+uint16_t lastPenX = 0;
 Color penColor = {0x7F, 0x7F, 0x7F};
 
 
@@ -58,8 +62,12 @@ void ngc_printChar(char c) {
     if (c == '\n') {
         ngc_printNewline();
         return;
-    }
-
+    } else 
+    if (c == 0x7F) // BACKSPACE code
+    {
+        delete_last_char();
+        return;
+    } else
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
 	    const char* data = font + 32*(c-33);
 	    for (int h=0; h<16; h++) {
@@ -86,6 +94,7 @@ void ngc_printChar(char c) {
 //ngc_clean == ngc_scroll(UP)
 
 void ngc_printNewline(void) {
+    lastPenX = penX;
     penX = 0; // pen x is set to full left.
 
     // If there is space for another line, we simply advance the pen y. Otherwise, we move up the entire screen and clear the lower part.
@@ -111,4 +120,24 @@ void ngc_printNewline(void) {
         memcpy(dst, src, len);
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
+}
+
+static void delete_last_char() {
+    // caso: Delete last '/n'
+    if (penX == 0) 
+    {
+        // caso en que DELETE fuera el primer caractér ingresado: lo omito
+        if (penY == 0) return;
+
+// TODO: SOLO SE PUEDE BORRAR UNA LINEA CON ESTA IMPLEMENTACION
+    
+        penY -= CHAR_HEIGHT;
+        penX = lastPenX;
+
+    }
+    // caso: Delete last char
+    else {
+        ngc_printNewline();
+    }
+    
 }
