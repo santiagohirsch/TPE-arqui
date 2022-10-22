@@ -7,6 +7,7 @@
 
 void ngc_printChar(char c);
 
+enum Dir {DOWN = 0, UP = 1};
 
 typedef struct {
 	uint8_t b;

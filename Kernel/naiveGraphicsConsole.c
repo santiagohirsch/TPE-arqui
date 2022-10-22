@@ -41,15 +41,19 @@ struct vbe_mode_info_structure {
     uint8_t reserved1[206];
 } __attribute__ ((packed));
 
-
-
 struct vbe_mode_info_structure* screenData = (void*)0x5C00;
 
+
+//    STATIC METHODS DECLARATION
+//
 static void* getPtrToPixel(uint16_t x, uint16_t y) {
     return (void*)(screenData->framebuffer + 3 * (x + (y * (uint64_t)screenData->width)));
 }
 
+static void delete_last_char();
+
 uint16_t penX = 0, penY = 0;
+uint16_t lastPenX = 0;
 Color penColor = {0x7F, 0x7F, 0x7F};
 
 
@@ -58,13 +62,18 @@ void ngc_printChar(char c) {
     if (c == '\n') {
         ngc_printNewline();
         return;
-    }
-
+    } else 
+    if (c == 0x7F) // BACKSPACE code
+    {
+        delete_last_char();
+        return;
+    } else
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
 	    const char* data = font + 32*(c-33);
         // cambiando h: cambio tam
 	    for (int h=0; h<16; h++) {
     		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
+            // si el bit en cada posicion esta prendido: pinto, sino dejo
     		if (*data & 0b00000001) pos[0] = penColor;
     		if (*data & 0b00000010) pos[1] = penColor;
     		if (*data & 0b00000100) pos[2] = penColor;
@@ -74,6 +83,7 @@ void ngc_printChar(char c) {
     		if (*data & 0b01000000) pos[6] = penColor;
     		if (*data & 0b10000000) pos[7] = penColor;
     		data++;
+            // salteo un pixel para espacear
     		if (*data & 0b00000001) pos[8] = penColor;
     		data++;
     	}
@@ -90,9 +100,8 @@ void ngc_print(char * string){
     }
 }
 
-//ngc_clean == ngc_scroll(UP)
-
 void ngc_printNewline(void) {
+    lastPenX = penX;
     penX = 0; // pen x is set to full left.
 
     // If there is space for another line, we simply advance the pen y. Otherwise, we move up the entire screen and clear the lower part.
@@ -107,7 +116,7 @@ void ngc_printNewline(void) {
         // (3 por rgb, CHAR_HEIGHT es el tamaño de cada linea, width es el ancho de la pantalla)
         void* src = (void*)(dst + 3 * (CHAR_HEIGHT * (uint64_t)screenData->width));
         
-        // len: selecciona toda la pantalla menos la ultima linea
+        // len: cantidad de pixeles en toda la pantalla menos la ultima linea
         // 3 por rgb, width es el ancho, height - CHAR_HEIGHT es todas las lineas excepto la ultima
         uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height - CHAR_HEIGHT));
         
@@ -118,4 +127,42 @@ void ngc_printNewline(void) {
         memcpy(dst, src, len);
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
+}
+
+static void delete_last_char() {
+    // caso: Delete last '/n'
+    if (penX == 0) 
+    {
+        // caso en que DELETE fuera el primer caractér ingresado: lo omito
+        if (penY == 0) return;
+
+// TODO: SOLO SE PUEDE BORRAR UNA LINEA CON ESTA IMPLEMENTACION
+    
+        penY -= CHAR_HEIGHT;
+        penX = lastPenX;
+
+    }
+    // caso: Delete last char
+    else {
+
+        penX -= CHAR_WIDTH;
+
+        Color aux = {0,0,0};
+
+        
+        for (int h=0; h<16; h++) {
+            // se llenan todos los pixeles del ultimo char en {0,0,0}
+    		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
+    	    pos[0] = aux;
+    		pos[1] = aux;
+    		pos[2] = aux;
+    		pos[3] = aux;
+    		pos[4] = aux;
+    		pos[5] = aux;
+    		pos[6] = aux;
+            pos[7] = aux;
+    		pos[8] = aux; // resetteo el espaciado aunque ya este seteado
+    	}
+    }
+    
 }
