@@ -1,15 +1,8 @@
 #include <syscalls.h>
 #include <libVid.h>
 #include <stdint.h>
+#include <string.h>
 
-static int _strlen(const char * str){
-	int ans = 0;
-	for (int i = 0; str[i] != 0; i++)
-	{
-		ans++;
-	}
-	return ans;
-}
 
 void print(const char *buffer){
     //lamo al syswrite 1=stdout
@@ -17,7 +10,7 @@ void print(const char *buffer){
 }
 
 void scan(char * buffer, uint64_t length){
-	sys_read(STDIN, buffer, length);
+	sys_read(KDBIN, buffer, length);
 }
 /*
 void scanf(char* buffer, int length){
