@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <defs.h>
+#include <string.h>
 #include <keyboard.h>
 
 static void sys_write_handler(unsigned int fd, const char * buffer, int bytes){
@@ -19,8 +20,8 @@ static void sys_read_handler(unsigned int fd,  char * buffer, int bytes){
                 flag = 1;
             }
         }
-        ngc_print("salio del while");
-        buffer = getBuffer();
+        uint64_t n = getBufferLength();
+        memcpy(buffer,getBuffer(),n);
     }
 }
 
