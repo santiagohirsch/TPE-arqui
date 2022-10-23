@@ -4,6 +4,7 @@
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
+#define KDBIN 3
 
 void sys_write(uint64_t fd, const char * buffer, uint64_t count);
 
