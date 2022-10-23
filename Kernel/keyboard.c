@@ -1,6 +1,7 @@
 #include <keyboard.h>
 #include <naiveGraphicsConsole.h>
 #include <stdint.h>
+#include <string.h>
 
 #define MAX_LENGTH 20
 
@@ -13,7 +14,7 @@ static const uint8_t charHexMap[256] = {
 };
 
 static uint8_t buffer[MAX_LENGTH] = {0};
-static uint8_t bufferLength = 0;
+static uint64_t bufferLength = 0;
 static uint8_t lastChar;
 
 void keyboard_handler(){
@@ -22,7 +23,13 @@ void keyboard_handler(){
     if (teclahex < 0x53){
         ngc_printChar(charHexMap[teclahex]);  
         lastChar = charHexMap[teclahex];
-        buffer[bufferLength++] = lastChar;
+        if (lastChar == '\n'){
+            buffer[bufferLength] = '\0';
+        } else if (lastChar == 0x7F && bufferLength > 0){
+            bufferLength--;
+        } else {
+            buffer[bufferLength++] = lastChar;
+        }   
     }
 }
 
@@ -32,14 +39,14 @@ char getLastChar(){
 
 
 static void clearBuffer(){
-    for ( int i = 0; i < MAX_LENGTH ; i++){
-        buffer[i]=0;
-    }
     bufferLength = 0;
+    lastChar = '\0';
 }
 
-char * getBuffer(){
-    char * out = buffer;
+
+char * getBuffer(){ // aca adentro todo ok
+    char *out;
+    memcpy(out,buffer, bufferLength);
     if (getLastChar() == '\n'){
         clearBuffer();
     }
@@ -55,4 +62,8 @@ char read_keyboard(){
     } else {
         return 'a';
     }
+}
+
+uint64_t getBufferLength(){
+    return bufferLength;
 }
