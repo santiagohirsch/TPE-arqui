@@ -48,12 +48,3 @@ void * memcpy(void * destination, const void * source, uint64_t length)
 
 	return destination;
 }
-
-int _strlen(const char * str){
-	int ans = 0;
-	for (int i = 0; str[i] != 0; i++)
-	{
-		ans++;
-	}
-	return ans;
-}
