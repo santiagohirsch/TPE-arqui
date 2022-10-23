@@ -14,7 +14,7 @@ typedef struct {
   uint32_t offset_h, other_cero;
 } DESCR_INT;
 
-#pragma pack(pop)		/* Reestablece la alinceación actual */
+#pragma pack(pop)		/* Reestablece la alineación actual */
 
 
 
@@ -25,17 +25,18 @@ static void setup_IDT_entry (int index, uint64_t offset);
 void load_idt() {
 
   _cli(); //para llamar varias veces al load_idt();
+
     setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
     setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);
     setup_IDT_entry (0x80, (uint64_t)&_irq80Handler);
     setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
     
 
-	//Solo interrupcion timer tick habilitadas (0xFE en masterMask)
-  //Para habilitar las interrupciones de teclado 0xFD en masterMask
-  //Para habilitar ambas 0xFC en masterMask
-	picMasterMask(0xFC);  
-	picSlaveMask(0xFF);  
+	// Solo interrupcion timer tick habilitadas (0xFE en masterMask)
+  // Para habilitar las interrupciones de teclado 0xFD en masterMask
+  // Para habilitar ambas 0xFC en masterMask
+	picMasterMask(0xFC);
+	picSlaveMask(0xFF);
         
 	_sti();
 }

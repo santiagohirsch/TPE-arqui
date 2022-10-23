@@ -1,5 +1,8 @@
 # Ignora archivos del sistema Mac 
-.DS_store
+.DS_Store
+
+# Ignora .bash_history
+.bash_history
 
 # Ignora los archivos de compilacion y linkedicion
 *.bin

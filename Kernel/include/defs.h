@@ -37,7 +37,9 @@
 #define DEFAULT (BLACK*16 + GRAY)
 
 /* File Descriptors */
+#define STDIN  0
 #define STDOUT 1
 #define STDERR 2
+#define KBDIN  3
 
 #endif

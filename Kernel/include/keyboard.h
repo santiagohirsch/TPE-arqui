@@ -6,6 +6,8 @@ extern uint64_t getKey();
 extern uint64_t tKey();
 
 void keyboard_handler();
-
+char getLastChar();
+char * getBuffer();
+uint64_t getBufferLength();
 
 #endif
