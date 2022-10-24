@@ -6,9 +6,9 @@
 #define STDERR 2
 #define KDBIN 3
 
-void sys_write(uint64_t fd, const char * buffer, uint64_t count);
+extern void sys_write(uint64_t fd, const char * buffer, uint64_t count);
 
-void sys_read(uint64_t fd, const char * buffer, uint64_t count);
+extern void sys_read(uint64_t fd, const char * buffer, uint64_t count);
 
 
 #endif
