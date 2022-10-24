@@ -2,6 +2,9 @@
 #include <defs.h>
 #include <string.h>
 #include <keyboard.h>
+#include <naiveRTC.h>
+
+
 
 static void sys_write_handler(unsigned int fd, const char * buffer, int bytes){
     if (fd == STDOUT){
@@ -25,7 +28,11 @@ static void sys_read_handler(unsigned int fd,  char * buffer, int bytes){
     }
 }
 
-static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler};
+static uint64_t sys_time_handler(){
+    return _NRTCGetHours() | ((uint64_t)_NRTCGetMins() << 8) | ((uint64_t)_NRTCGetSeconds() << 16);
+}
+
+static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por eax
 void syscallDispatcher(void * rdi, void * rsi, void * rdx, void * rcx, void * r8, uint64_t rax){
