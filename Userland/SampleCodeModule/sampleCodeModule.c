@@ -50,7 +50,14 @@ static void printMem(uint64_t memDirec){
 
 
 static void time(){
-	
+	/*if(parameters[0][0]!=0){
+		print("Try help without parameters\n");
+		return;
+	}*/
+	char timeBuffer[8];
+	getTime(timeBuffer);
+	print(timeBuffer);
+	print("\n");
 }
 
 
@@ -103,6 +110,9 @@ int main() {
 		int idx = findIdxCommand(buff_command);
 		if (idx==0){
 			help();
+		}
+		if (idx == 6){
+			time();
 		}
 		
 		  

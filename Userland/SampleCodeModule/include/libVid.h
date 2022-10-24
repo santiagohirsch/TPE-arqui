@@ -7,4 +7,6 @@ void print(const char *buffer);
 
 void scanf(char* buffer, int length);
 
+void getTime(char * buffer);
+
 #endif
