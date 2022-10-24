@@ -66,7 +66,9 @@ static void tron(){
 static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
 static void (*commands_functions[])(char parameters[COMMANDS_LENGTH][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
 
-
+static void printWelcomeMessage() {
+	print("WELCOME! Type \"HELP\" for list\n");
+}
 
 static int findIdxCommand(char *buff){
 
@@ -90,7 +92,8 @@ int main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
 
-	print("WELCOME! Type \"HELP\" for list\n");
+	printWelcomeMessage();
+
 	while(1){
 		print("$>");
 		//recepcion de parametros ???????
