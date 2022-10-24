@@ -1,5 +1,34 @@
-#include <string.h>
+#include <stringUtil.h>
 #include <stdint.h>
+
+
+uint64_t getFormat(uint64_t n) {
+	uint64_t dec = n & 240;
+	dec = dec >> 4;
+	uint64_t units = n & 15;
+	return dec * 10 + units;
+}
+
+uint64_t itoa(uint64_t number, char* s) {
+    int digits = 1;
+	for (int n=number/10; n != 0; digits++, n /= 10);
+
+    if(digits == 1) {
+        s[0] = '0';
+        s[1] = number + '0';
+        s[2] = 0;
+        return digits;
+    }
+	
+	s[digits] = 0;    
+	for (int i=digits-1; i>=0; i--) {
+		s[i] = (number % 10) + '0';
+		number /= 10;
+	}
+	
+	return digits;
+}
+
 
 void _strcpy(char * dest, char * src, int n){
     while (*src != '\0' && n > 0){
