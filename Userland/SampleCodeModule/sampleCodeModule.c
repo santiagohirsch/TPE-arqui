@@ -70,8 +70,9 @@ static void (*commands_functions[])(char parameters[COMMANDS_LENGTH][LENGTH_PARA
 
 static int findIdxCommand(char *buff){
 
+	// caso '\n'
 	if (_strlen(buff) == 0) {
-		return 1;
+		return -1;
 	}
 	
 	for (int i = 0; i < COMMANDS_LENGTH ; i++){
