@@ -69,11 +69,18 @@ static void (*commands_functions[])(char parameters[COMMANDS_LENGTH][LENGTH_PARA
 
 
 static int findIdxCommand(char *buff){
+
+	if (_strlen(buff) == 0) {
+		return 1;
+	}
+	
 	for (int i = 0; i < COMMANDS_LENGTH ; i++){
 		if (_strcmp(buff, commands[i]) == 0){
 			return i;
 		}
 	}
+	
+	
 	print("Command not found: try again\n");
 	return -1; //command not found
 }
