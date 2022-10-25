@@ -56,7 +56,8 @@ uint16_t penX = 0, penY = 0;
 uint16_t lastPenX = 0;
 Color penColor = {0x7F, 0x7F, 0x7F};
 
-
+// ==============================================================================
+// PUBLIC NGC_PRINT METHODS
 
 void ngc_printChar(char c) {
     if (c == '\n') {
@@ -146,6 +147,7 @@ void ngc_printNewline(void) {
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
     }
 }
+// ==============================================================================
 
 static void delete_last_char() {
     // caso: Delete last '/n'
