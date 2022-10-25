@@ -27,7 +27,7 @@ void keyboard_handler(){
             buffer[bufferLength] = '\0';
         } else if (lastChar == 0x7F && bufferLength > 0){
             bufferLength--;
-        } else if (lastChar != ' ' && lastChar != '\t'){
+        } else if (lastChar != '\t'){
             buffer[bufferLength++] = lastChar;
         }   
     }
