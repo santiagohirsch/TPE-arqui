@@ -72,7 +72,24 @@ void ngc_printChar(char c) {
 	    const char* data = font + 32*(c-33);
         // cambiando h: cambio tam
 	    for (int h=0; h<16; h++) {
-    		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
+    		
+            /* Imprimir en tamaño x2 
+            Color* pos = (Color*)getPtrToPixel(penX, penY+2*h);
+            // si el bit en cada posicion esta prendido: pinto, sino dejo
+    		if (*data & 0b00000001) pos[0] = penColor, pos[1] = penColor;
+    		if (*data & 0b00000010) pos[2] = penColor, pos[3] = penColor;
+    		if (*data & 0b00000100) pos[4] = penColor, pos[5] = penColor;
+    		if (*data & 0b00001000) pos[6] = penColor, pos[7] = penColor;
+    		if (*data & 0b00010000) pos[8] = penColor, pos[9] = penColor;
+    		if (*data & 0b00100000) pos[10] = penColor, pos[11] = penColor;
+    		if (*data & 0b01000000) pos[12] = penColor, pos[13] = penColor;
+    		if (*data & 0b10000000) pos[14] = penColor, pos[15] = penColor;
+    		data++;
+            // salteo un pixel para espacear
+    		if (*data & 0b00000001) pos[16] = penColor, pos[17] = penColor;
+    		data++;
+            */
+            Color* pos = (Color*)getPtrToPixel(penX, penY+h);
             // si el bit en cada posicion esta prendido: pinto, sino dejo
     		if (*data & 0b00000001) pos[0] = penColor;
     		if (*data & 0b00000010) pos[1] = penColor;
@@ -86,6 +103,7 @@ void ngc_printChar(char c) {
             // salteo un pixel para espacear
     		if (*data & 0b00000001) pos[8] = penColor;
     		data++;
+            
     	}
     }
 
@@ -131,15 +149,16 @@ void ngc_printNewline(void) {
 
 static void delete_last_char() {
     // caso: Delete last '/n'
-    if (penX == 0) 
+    if (penX == CHAR_WIDTH*2) //Para que no se pueda borrar el prompt
     {
         // caso en que DELETE fuera el primer caractér ingresado: lo omito
-        if (penY == 0) return;
+        //if (penY == 0) return;
 
 // TODO: SOLO SE PUEDE BORRAR UNA LINEA CON ESTA IMPLEMENTACION
     
-        penY -= CHAR_HEIGHT;
-        penX = lastPenX;
+        /*penY -= CHAR_HEIGHT;
+        penX = lastPenX;*/
+        return;
 
     }
     // caso: Delete last char

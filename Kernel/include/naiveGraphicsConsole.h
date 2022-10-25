@@ -2,7 +2,7 @@
 #define NAIVE_GRAPHICS_CONSOLE_H
 
 #include <stdint.h>
-#define CHAR_WIDTH 9
+#define CHAR_WIDTH 9 //18 para imprimir x2
 #define CHAR_HEIGHT 16
 
 void ngc_printChar(char c);
