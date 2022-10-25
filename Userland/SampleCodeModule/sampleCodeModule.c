@@ -212,7 +212,7 @@ static void time(int argc, char params[][LENGTH_PARAMETERS]){
 		print("Try help without parameters\n");
 		return;
 	}*/
-	char timeBuffer[8];
+	char timeBuffer[9];
 	getTime(timeBuffer);
 	print(timeBuffer);
 	print("\n");
