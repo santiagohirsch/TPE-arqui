@@ -1,6 +1,6 @@
 #include <libVid.h>
 #include <stdint.h>
-#include <string.h>
+#include <stringUtil.h>
 
 #define MAX_PARAMETERS 5
 #define LENGTH_PARAMETERS 20
@@ -10,7 +10,6 @@
 
 
 static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
-static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
 
 static const char* registerNames[REGISTERS] = {
     "rip", "rax", "rbx", "rxc", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
@@ -35,6 +34,7 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
 
 static int findIdxCommand(char *buff);
 static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
@@ -60,7 +60,7 @@ main() {
 		if(idx >= 0 ){
 			commands_functions[idx] (size,parameters);
 		}
-		else{
+		else if (idx == -1){
 			print("Command not found: try again\n");
 		}
 	}
@@ -75,7 +75,7 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 	while(i<BUFFER_LENGTH && readbuf[i]==' '){
 		i++;
 	}
-	for( j=0; i<BUFFER_LENGTH && readbuf[i]!=' '; i++){
+	for( j=0; i<BUFFER_LENGTH && readbuf[i]!=' ' && readbuf[i] != '\0'; i++){
 			command[j++] = readbuf[i];
 	}
 
@@ -229,8 +229,8 @@ static void tron(int argc, char params[][LENGTH_PARAMETERS]){
 
 static int findIdxCommand(char *buff){
 
-	if (_strlen(buff) == 0) {
-		return 1;
+	if (_strlen(buff) == 0) { //Me pasan un enter suelto
+		return -2;            //Para diferenciar de command not found
 	}
 	
 	for (int i = 0; i < COMMANDS_LENGTH ; i++){
