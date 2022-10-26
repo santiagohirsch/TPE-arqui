@@ -1,9 +1,7 @@
 #ifndef LIBVID_H
 #define LIBVID_H
 
-//void print(const char *buffer, int count, Color color);
-
-void print(const char *buffer);
+void printf(const char *format, ...);
 
 void scanf(char* buffer, int length);
 
