@@ -3,6 +3,7 @@
 #include <string.h>
 #include <keyboard.h>
 #include <naiveRTC.h>
+#include <naiveGraphicsConsole.h>
 
 //extern uint64_t info;
 
@@ -32,11 +33,16 @@ static uint64_t sys_time_handler(){
     return (_NRTCGetHours()) | ((uint64_t)_NRTCGetMins() << 8) | ((uint64_t)_NRTCGetSeconds() << 16);
 }
 
+static void sys_clear_screen_handler() {
+    Color black = {0, 0, 0};
+    ngc_paint_screen(black);
+}
+
 static uint64_t sys_screenshot_handler(){
     //return info;
 }
 
-static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_screenshot_handler};
+static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_clear_screen_handler, sys_screenshot_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por eax
 void syscallDispatcher(void * rdi, void * rsi, void * rdx, void * rcx, void * r8, uint64_t rax){
