@@ -12,4 +12,6 @@ void sys_read(uint64_t fd, const char * buffer, uint64_t count);
 
 uint64_t sys_time();
 
+uint8_t sys_inforeg(uint64_t regVec[17]);
+
 #endif

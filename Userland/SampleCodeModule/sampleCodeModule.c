@@ -8,11 +8,10 @@
 #define COMMANDS_LENGTH 9
 #define REGISTERS 17
 
-
 static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
 
 static const char* registerNames[REGISTERS] = {
-    "rip", "rax", "rbx", "rxc", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
+    "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
 };
 
 /* COMMANDS */
@@ -172,7 +171,9 @@ static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 		return;
 	}
 	printf("info reg\n");
+	getInfoReg();
 }
+
 
 //1 param: memDirec
 static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
