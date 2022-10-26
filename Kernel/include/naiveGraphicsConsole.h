@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 #define CHAR_WIDTH 9 //18 para imprimir x2
-#define CHAR_HEIGHT 16
-
-void ngc_printChar(char c);
+#define CHAR_HEIGHT 16 //32 para imprimir x2
 
 enum Dir {DOWN = 0, UP = 1};
 
@@ -16,8 +14,10 @@ typedef struct {
 } Color;
 
 
-
-void print(char * string);
 void ngc_printNewline(void);
+
+void ngc_printChar(char c);
+
+void ngc_print(char * s);
 
 #endif
