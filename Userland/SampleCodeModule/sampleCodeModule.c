@@ -141,7 +141,10 @@ static void screenshot(int argc, char params[][LENGTH_PARAMETERS]){
 		printf("Try screenshot without parameters\n");
 		return;
 	}
-	printf("screenshot\n");
+	//deberia agarrar el idx del parametro q me mandan y pasarselo a getScreenshot()
+	//por ahora pruebo q me imprima rax
+	//uint64_t info = getScreenshot();
+	//printf("screenshot de rip: %x\n", info);
 }
 
 //no params

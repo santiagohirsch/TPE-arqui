@@ -21,6 +21,8 @@ EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
+;GLOBAL info
+
 SECTION .text
 
 %macro pushState 0
@@ -150,6 +152,8 @@ _irq80Handler:
 	mov rbp, rsp
 	mov rcx, r10
 	mov r9, rax
+	;mov rax, $
+	;mov [info], rax
 	call syscallDispatcher
 	
 	mov rsp, rbp
@@ -169,3 +173,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
+	;info resq 1

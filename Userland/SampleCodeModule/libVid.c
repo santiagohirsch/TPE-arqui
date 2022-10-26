@@ -26,7 +26,11 @@ void getTime(char * buffer){
     p[8] = 0;
 
 }
-
+/*
+uint64_t getScreenshot(){
+	return sys_screenshot();
+}
+*/
 void scanf(char* buffer, int length){
 
 }
