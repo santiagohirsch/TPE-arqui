@@ -73,23 +73,26 @@ void ngc_printChar(char c) {
 	    const char* data = font + 32*(c-33);
         // cambiando h: cambio tam
 	    for (int h=0; h<16; h++) {
-    		
+            /*
             /* Imprimir en tamaño x2 
-            Color* pos = (Color*)getPtrToPixel(penX, penY+2*h);
+            Color* pos = (Color*)getPtrToPixel(penX, penY+h);
+            Color* pos2 = (Color*)getPtrToPixel(penX, penY+h+1);
+            Color* pos3 = (Color*)getPtrToPixel(penX, penY+h+2);
             // si el bit en cada posicion esta prendido: pinto, sino dejo
-    		if (*data & 0b00000001) pos[0] = penColor, pos[1] = penColor;
-    		if (*data & 0b00000010) pos[2] = penColor, pos[3] = penColor;
-    		if (*data & 0b00000100) pos[4] = penColor, pos[5] = penColor;
-    		if (*data & 0b00001000) pos[6] = penColor, pos[7] = penColor;
-    		if (*data & 0b00010000) pos[8] = penColor, pos[9] = penColor;
-    		if (*data & 0b00100000) pos[10] = penColor, pos[11] = penColor;
-    		if (*data & 0b01000000) pos[12] = penColor, pos[13] = penColor;
-    		if (*data & 0b10000000) pos[14] = penColor, pos[15] = penColor;
-    		data++;
+            if (*data & 0b00000001) pos[0] = penColor, pos[1] = penColor, pos2[0] = penColor, pos2[1] = penColor/*,pos3[0] = penColor, pos3[1] = penColor;       
+            if (*data & 0b00000010) pos[2] = penColor, pos[3] = penColor, pos2[2] = penColor, pos2[3] = penColor/*,pos3[2] = penColor, pos3[3] = penColor;       
+            if (*data & 0b00000100) pos[4] = penColor, pos[5] = penColor, pos2[4] = penColor, pos2[5] = penColor/*,pos3[4] = penColor, pos3[5] = penColor;
+            if (*data & 0b00001000) pos[6] = penColor, pos[7] = penColor , pos2[6] = penColor, pos2[7] = penColor/*,pos3[6] = penColor, pos3[7] = penColor;     
+            if (*data & 0b00010000) pos[8] = penColor, pos[9] = penColor , pos2[8] = penColor, pos2[9] = penColor/*,pos3[8] = penColor, pos3[9] = penColor;
+            if (*data & 0b00100000) pos[10] = penColor, pos[11] = penColor, pos2[10] = penColor, pos2[11] = penColor/*,pos3[10] = penColor, pos3[11] = penColor;
+            if (*data & 0b01000000) pos[12] = penColor, pos[13] = penColor, pos2[12] = penColor, pos2[13] = penColor/*,pos3[12] = penColor, pos3[13] = penColor;
+            if (*data & 0b10000000) pos[14] = penColor, pos[15] = penColor, pos2[14] = penColor, pos2[15] = penColor/*,pos3[14] = penColor, pos3[15] = penColor;
+            data++;
             // salteo un pixel para espacear
-    		if (*data & 0b00000001) pos[16] = penColor, pos[17] = penColor;
-    		data++;
+            if (*data & 0b00000001) pos[16] = penColor, pos[17] = penColor,  pos2[16] = penColor, pos2[17] = penColor,pos3[16] = penColor, pos3[17] = penColor;
+            data++;
             */
+        
             Color* pos = (Color*)getPtrToPixel(penX, penY+h);
             // si el bit en cada posicion esta prendido: pinto, sino dejo
     		if (*data & 0b00000001) pos[0] = penColor;
@@ -105,9 +108,8 @@ void ngc_printChar(char c) {
     		if (*data & 0b00000001) pos[8] = penColor;
     		data++;
             
-    	}
+        }
     }
-
     penX += CHAR_WIDTH;
     if (penX > screenData->width - CHAR_WIDTH)
         ngc_printNewline();
