@@ -5,11 +5,11 @@
 #define MAX_PARAMETERS 5
 #define LENGTH_PARAMETERS 20
 #define BUFFER_LENGTH 20
-#define COMMANDS_LENGTH 9
+#define COMMANDS_LENGTH 10
 #define REGISTERS 17
 
 
-static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
+static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
 static const char* registerNames[REGISTERS] = {
     "rip", "rax", "rbx", "rxc", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
@@ -34,7 +34,19 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 
-static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
+static void clearScreen(int argc, char params[][LENGTH_PARAMETERS]);
+
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {
+	help, 
+	screenshot, 
+	invalidOPCode, 
+	divideByZero, 
+	inforeg, 
+	printMem, 
+	time, 
+	changeFontSize, 
+	tron, 
+	clearScreen};
 
 static int findIdxCommand(char *buff);
 static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
@@ -228,6 +240,12 @@ static void tron(int argc, char params[][LENGTH_PARAMETERS]){
 		return;
 	}
 	printf("tron\n");
+}
+
+
+static void clearScreen(int argc, char params[][LENGTH_PARAMETERS]) {
+	do_clearScreen();
+	return;
 }
 
 static int findIdxCommand(char *buff){
