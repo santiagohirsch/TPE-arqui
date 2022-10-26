@@ -5,7 +5,7 @@
 
 void printf(const char *format, ...);
 
-void scanf(char* buffer, int length);
+void scanf(char* format, ...);
 
 void getTime(char * buffer);
 

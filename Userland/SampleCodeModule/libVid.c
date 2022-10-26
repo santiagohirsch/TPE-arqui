@@ -5,6 +5,7 @@
 #include <stdarg.h>
 
 #define MAX_INT 18
+#define MAX_BUFFER 20
 
 void putString(const char *buffer){
     //lamo al syswrite 1=stdout
@@ -26,14 +27,134 @@ void getTime(char * buffer){
     p[8] = 0;
 
 }
+
+
+int strtoi(char * buffer, int * i){
+	char strnum[MAX_INT];
+	int numsize=0;
+	while(buffer[*i] != ' ' && buffer[*i] != '\n' && buffer[*i] != '\0'){
+		strnum[numsize++] = buffer[*i];
+		(*i)++;
+	}
+	int out = atoi(strnum);
+	return out;
+}
+
+//en  fmt nos pasa formato ... nos van a mandar las variables a dnd asignar
+void scanf(char * format,...){
+	va_list vl;
+
+	//lectura del buffer
+	char buffer[MAX_BUFFER];
+	sys_read(KDBIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
+	//parseamos para poder asignarselo a cada param
+	//primer caracter si o si %
+	if(*format != '%'){
+		printf("uso incorrecto de scanf\n");
+		return;
+	}
+	va_start(vl,format);
+	int buffIdx = 0;
+	while (*format != '\0'){
+		if(*format != '%'){ //letra o espacio
+			if ( *format != ' '){
+				printf("uso incorrecto de scanf\n");
+				return;
+			}
+			else{
+				*format++; //deberia tmbn indicar el inicio d un nuevo param
+			}
+		}
+		else{
+			*format++;
+			switch (*format) { //caso en el q estoy en una letra 
+            	case 'd':
+				case 'D':
+					*(int *)va_arg( vl, int* ) = strtoi(buffer, &buffIdx);	
+					//sys_read(d terminal)
+					//asignacion a la direccion d memoria pasada  hola que tal
+                	//putInt(va_arg(p_arg, int));
+                	break;
+            	case 'c':
+				case 'C':
+					*(char *)va_arg( vl, char* ) = buffer[buffIdx++];
+                	//putChar(va_arg(p_arg, int));  // char promociona a int
+                	break;
+            	case 's':
+				case 'S':
+					*(char *)va_arg( vl, char* ) = buffer;
+                	//putString(va_arg(p_arg, char *));
+                	break;
+				case ' ':
+					printf("uso incorrecto de scanf (Fijese de no dejar espacios luego del porcentaje)\n");
+					return;
+			}
+			
+			*format++;	
+		}
+	}
+	va_end(vl);
+}
 /*
 uint64_t getScreenshot(){
 	return sys_screenshot();
 }
-*/
-void scanf(char* buffer, int length){
 
-}
+void _scanf(char* format , ...){
+	va_list vl;
+    int i = 0, j=0, ret = 0;
+    char buff[100] = {0}, tmp[20], c;
+    char *out_loc;
+    while(c != '') 
+    {
+        if (fread(&c, 1, 1, stdin)) 
+        {
+ 	       buff[i] = c;
+ 	       i++;
+ 	    }
+ 	}
+ 	va_start( vl, format );
+ 	i = 0;
+ 	while (format && format[i])
+ 	{
+ 	    if (format[i] == '%') 
+ 	    {
+ 	       i++;
+ 	       switch (format[i]) 
+ 	       {
+ 	           case 'c': 
+ 	           {
+	 	           *(char *)va_arg( vl, char* ) = buff[j];
+	 	           j++;
+	 	           ret ++;
+	 	           break;
+ 	           }
+ 	           case 'd': 
+ 	           {
+	 	           *(int *)va_arg( vl, int* ) = _strtol(&buff[j], &out_loc, 10);
+	 	           j+=out_loc -&buff[j];
+	 	           ret++;
+	 	           break;
+ 	            }
+ 	            case 'x': 
+ 	            {
+	 	           *(int *)va_arg( vl, int* ) = _strtol(&buff[j], &out_loc, 16);
+	 	           j+=out_loc -&buff[j];
+	 	           ret++;
+	 	           break;
+ 	            }
+ 	        }
+ 	    } 
+ 	    else 
+ 	    {
+ 	        buff[j] =format[i];
+            j++;
+        }
+        i++;
+    }
+    va_end(vl);
+    return ret;
+}*/
 
 void putChar(char c) {
 	sys_write(STDOUT, &c, 1);
@@ -66,9 +187,8 @@ void putBase(int num, int base){
 void putInt(int num){
 	char strnum[MAX_INT];
 	itoa(num,strnum);
-	putString(strnum+1);
+	putString(strnum);
 }
-
 
 // para una cantidad de argumentos variable usamos la lib stdarg.h
 void printf (const char *format, ...)
@@ -115,6 +235,3 @@ void printf (const char *format, ...)
     va_end(p_arg);
 }
 
-char getChar(){
-
-}
