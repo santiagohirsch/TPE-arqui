@@ -26,6 +26,11 @@ void getTime(char * buffer){
     p[8] = 0;
 
 }
+
+void do_clearScreen() {
+	sys_clear_screen();
+}
+
 /*
 uint64_t getScreenshot(){
 	return sys_screenshot();
