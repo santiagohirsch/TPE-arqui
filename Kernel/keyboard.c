@@ -17,9 +17,9 @@ static uint8_t buffer[MAX_LENGTH] = {0};
 static uint64_t bufferLength = 0;
 static uint8_t lastChar;
 
-void keyboard_handler(){
-    uint64_t i=tKey();
-	uint64_t teclahex=i;
+void keyboard_handler(uint64_t teclahex){
+    /*uint64_t i=tKey();
+	uint64_t teclahex=i;*/
     if (teclahex < 0x53){
         ngc_printChar(charHexMap[teclahex]);  
         lastChar = charHexMap[teclahex];

@@ -9,6 +9,5 @@ void scanf(char* format, ...);
 
 void getTime(char * buffer);
 
-//uint64_t getScreenshot();
-
+void getInfoReg();
 #endif

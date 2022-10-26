@@ -95,9 +95,32 @@ void scanf(char * format,...){
 	}
 	va_end(vl);
 }
-/*
-uint64_t getScreenshot(){
-	return sys_screenshot();
+
+void getInfoReg(){
+	uint64_t reg[17];
+	uint8_t huboScreenshot = sys_inforeg(reg);
+	if (huboScreenshot){
+		//rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 
+		printf("rip = %x\n", reg[0]);
+		printf("rax = %x\n", reg[1]);
+		printf("rbx = %x\n", reg[2]);
+		printf("rcx = %x\n", reg[3]);
+		printf("rdx = %x\n", reg[4]);
+		printf("rsi = %x\n", reg[5]);
+		printf("rdi = %x\n", reg[6]);
+		printf("rbp = %x\n", reg[7]);
+		printf("rsp = %x\n", reg[8]);
+		printf("r8  = %x\n", reg[9]);
+		printf("r9  = %x\n", reg[10]);
+		printf("r10 = %x\n", reg[11]);
+		printf("r11 = %x\n", reg[12]);
+		printf("r12 = %x\n", reg[13]);
+		printf("r13 = %x\n", reg[14]);
+		printf("r14 = %x\n", reg[15]);
+		printf("r15 = %x\n", reg[16]);
+	} else {
+		printf("No se ha hecho un screenshot, presione la tecla CTRL e intente de nuevo.\n");
+	}
 }
 
 void _scanf(char* format , ...){
