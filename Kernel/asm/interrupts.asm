@@ -20,8 +20,10 @@ GLOBAL _exception0Handler
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
+EXTERN keyboard_handler
 
-;GLOBAL info
+GLOBAL info
+GLOBAL screenshot
 
 SECTION .text
 
@@ -125,7 +127,44 @@ _irq00Handler:
 
 ;Keyboard
 _irq01Handler:
-	irqHandlerMaster 1
+	;irqHandlerMaster 1
+	pushState
+ 	mov rax, 0
+    in al, 0x60
+	cmp al, 0x1D ;me fijo si la tecla es un ctrl
+	jne .continue
+	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 
+	mov [info+(1*8)], rax
+	mov rax, $
+	mov [info], rax ;rip
+	mov [info+(2*8)], rbx
+	mov [info+(3*8)], rcx
+	mov [info+(4*8)], rdx
+	mov [info+(5*8)], rsi
+	mov [info+(6*8)], rdi
+	mov [info+(7*8)], rbp
+	mov [info+(8*8)], rsp
+	mov [info+(9*8)], r8
+	mov [info+(10*8)], r9
+	mov [info+(11*8)], r10
+	mov [info+(12*8)], r11
+	mov [info+(13*8)], r12
+	mov [info+(14*8)], r13
+	mov [info+(15*8)], r14
+	mov [info+(16*8)], r15
+	mov byte[screenshot], 1
+	jmp .end
+	.continue:
+	mov rdi, rax
+	call keyboard_handler
+	.end:
+	mov al, 20h
+	out 20h, al
+	popState
+	iretq
+	
+
+
 
 ;Cascade pic never called
 _irq02Handler:
@@ -173,4 +212,5 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
-	;info resq 1
+	info resq 17
+	screenshot resb 1 ;reservo un bit para poner en 1 si hubo un screenshot
