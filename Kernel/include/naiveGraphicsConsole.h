@@ -20,4 +20,6 @@ void ngc_printChar(char c);
 
 void ngc_print(char * s);
 
+void ngc_paint_screen(Color bg_color);
+
 #endif
