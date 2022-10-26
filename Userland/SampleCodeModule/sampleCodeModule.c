@@ -43,25 +43,27 @@ int
 main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
-	print("WELCOME! Type \"HELP\" for list\n");
+	printf("WELCOME! Type \"HELP\" for list\n");
 
 	while(1){
-		print("$>");
-		//buffer para ver q comando me manda
+		printf("$>");
+		// buffer para ver q comando me manda
 		char buff_command[BUFFER_LENGTH] = {0};
+		// command
 		char command[COMMANDS_LENGTH] = {0};
+		// parametros enviados junto al comando
 		char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
 		scan(buff_command, BUFFER_LENGTH); //sys_read de todo
 	
-		int size = parseBuffer(command,parameters,buff_command);
+		int size = parseBuffer(command, parameters, buff_command);
 
 		int idx = findIdxCommand(command);
 
 		if(idx >= 0 ){
-			commands_functions[idx] (size,parameters);
+			commands_functions[idx](size,parameters);
 		}
 		else if (idx == -1){
-			print("Command not found: try again\n");
+			printf("Command not found: try again\n");
 		}
 	}
 	return 0;
@@ -115,7 +117,7 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 // no params
 static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		print("Try help without parameters\n");
+		printf("Try help without parameters\n");
 		return;
 	}
 	
@@ -130,64 +132,65 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	"TIME                 Command to display the system day and time.\n"
 	"CHANGEFONTSIZE       Changes font size.\n"
 	"TRON                 Get ready to play Tron!.\n";
-	print(helpstring);
+	printf(helpstring);
 }
 
 // 1 param: register
 static void screenshot(int argc, char params[][LENGTH_PARAMETERS]){
 	if (argc!=0){
-		print("Try screenshot without parameters\n");
+		printf("Try screenshot without parameters\n");
 		return;
 	}
-	print("screenshot\n");
+	printf("screenshot\n");
 }
 
 //no params
 static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		print("Try invalidOpCode without parameters\n");
+		printf("Try invalidOpCode without parameters\n");
 		return;
 	}
-	print("invalidOPcode\n");
+	printf("invalidOPcode\n");
 }
 
 //no params
 static void divideByZero(int argc, char params[][LENGTH_PARAMETERS]){ 
 	if(argc!=0){
-		print("Try dividebyzero without parameters\n");
+		printf("Try dividebyzero without parameters\n");
 		return;
 	}
-	print("divide by zero\n");
+	printf("divide by zero\n");
 }
 
 //no params
 static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		print("Try inforeg without parameters\n");
+		printf("Try inforeg without parameters\n");
 		return;
 	}
-	print("info reg\n");
+	printf("info reg\n");
 }
 
 //1 param: memDirec
 static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	
 	if(argc != 1){
-		print("Try printMem with 1 parameter (memDir)\n");
+		printf("Try printMem with %d parameter (memDir)\n", 1);
+		printf("Try printMem with %X parameter (memDir)\n", 16);
 		return;
 	}
-	for (int i= 0; i<REGISTERS;i++){
+	for (int i= 0; i < REGISTERS;i++){
 		if( _strcmp(params[0], registerNames[i]) == 0){
-			print("parametro correct: ");
-			print(params[0]);
+			printf("parametro correct: ");
+			printf(params[0]);
 			return;
 		}
 	}
 	//si llegue aca no hubo param
-	print("param incorrecto pete\n");
-	print(params[0]);
-	print("\n");
-	print("fin de params\n");
+	printf("param incorrecto pete\n");
+	printf(params[0]);
+	printf("\n");
+	printf("fin de params\n");
 }
 
 
@@ -196,35 +199,32 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 	/*for(int i=0;i<argc;i++)
 		print("a");*/
 	if(argc != 1){
-		print("Try change font size with 1 parameter (setting)\n");
+		printf("Try change font size with 1 parameter (setting)\n");
 		return;
 	}
-	print("change font size\n");
+	printf("change font size\n");
 }
 
 //no params
 static void time(int argc, char params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		print("Try time without parameters\n");
+		printf("Try time without parameters\n");
 		return;
 	}
-	print("time\n");/*if(parameters[0][0]!=0){
-		print("Try help without parameters\n");
-		return;
-	}*/
+	printf("time\n");
 	char timeBuffer[9];
 	getTime(timeBuffer);
-	print(timeBuffer);
-	print("\n");
+	printf(timeBuffer);
+	printf("\n");
 }
 
 //no params
 static void tron(int argc, char params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		print("Try tron without parameters\n");
+		printf("Try tron without parameters\n");
 		return;
 	}
-	print("tron\n");
+	printf("tron\n");
 }
 
 static int findIdxCommand(char *buff){
