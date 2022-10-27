@@ -22,7 +22,7 @@ EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
-;GLOBAL info
+
 
 SECTION .text
 
@@ -80,9 +80,30 @@ SECTION .text
 
 %macro exceptionHandler 1
 	pushState
-
+	
 	mov rdi, %1 ; pasaje de parametro
-	;me guardo los registros
+	;me guardo los registros para imprimir
+	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
+	mov [regdata+(1*8)], rax
+	mov rax, $
+	mov [regdata], rax ;rip
+	mov [regdata+(2*8)], rbx
+	mov [regdata+(3*8)], rcx
+	mov [regdata+(4*8)], rdx
+	mov [regdata+(5*8)], rsi
+	mov [regdata+(6*8)], rdi
+	mov [regdata+(7*8)], rbp
+	mov [regdata+(8*8)], rsp
+	mov [regdata+(9*8)], r8
+	mov [regdata+(10*8)], r9
+	mov [regdata+(11*8)], r10
+	mov [regdata+(12*8)], r11
+	mov [regdata+(13*8)], r12
+	mov [regdata+(14*8)], r13
+	mov [regdata+(15*8)], r14
+	mov [regdata+(16*8)], r15
+	mov [regdata+(17*8)], rax ;deberia ser rflags
+	mov rsi, regdata
 	call exceptionDispatcher
 
 	popState
@@ -154,8 +175,6 @@ _irq80Handler:
 	mov rbp, rsp
 	mov rcx, r10
 	mov r9, rax
-	;mov rax, $
-	;mov [info], rax
 	call syscallDispatcher
 	
 	mov rsp, rbp
@@ -168,7 +187,7 @@ _divideByZeroInterruption:
 
 ;Invalid Op Code Exception
 _invalidOpCodeInterruption:
-	exceptionHandler 01h
+	exceptionHandler 06h
 
 
 haltcpu:
@@ -180,4 +199,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
-	;info resq 1
+	regdata resq 18
