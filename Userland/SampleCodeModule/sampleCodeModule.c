@@ -153,7 +153,8 @@ static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 		printf("Try invalidOpCode without parameters\n");
 		return;
 	}
-	printf("invalidOPcode\n");
+	printf("Invalid Op Code");
+	excInvalidOpCode();
 }
 
 //no params
@@ -163,6 +164,7 @@ static void divideByZero(int argc, char params[][LENGTH_PARAMETERS]){
 		return;
 	}
 	printf("divide by zero\n");
+	excDivideByZero();
 }
 
 //no params
