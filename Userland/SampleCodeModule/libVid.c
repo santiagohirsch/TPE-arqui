@@ -122,7 +122,7 @@ void getInfoReg(){
 		printf("No se ha hecho un screenshot, presione la tecla CTRL e intente de nuevo.\n");
 	}
 }
-
+/*
 void _scanf(char* format , ...){
 	va_list vl;
     int i = 0, j=0, ret = 0;

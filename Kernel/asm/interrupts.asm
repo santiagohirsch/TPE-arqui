@@ -131,7 +131,7 @@ _irq01Handler:
 	pushState
  	mov rax, 0
     in al, 0x60
-	cmp al, 0x1D ;me fijo si la tecla es un ctrl
+	cmp al, 0b00011101 ;me fijo si la tecla es un ctrl
 	jne .continue
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 
 	mov [info+(1*8)], rax
@@ -154,17 +154,18 @@ _irq01Handler:
 	mov [info+(16*8)], r15
 	mov byte[screenshot], 1
 	jmp .end
-	.continue:
+.continue:
+	cmp al, 0b10011101
+	je .end
+
 	mov rdi, rax
 	call keyboard_handler
-	.end:
+.end:
 	mov al, 20h
 	out 20h, al
 	popState
 	iretq
 	
-
-
 
 ;Cascade pic never called
 _irq02Handler:
@@ -191,8 +192,6 @@ _irq80Handler:
 	mov rbp, rsp
 	mov rcx, r10
 	mov r9, rax
-	;mov rax, $
-	;mov [info], rax
 	call syscallDispatcher
 	
 	mov rsp, rbp
