@@ -19,7 +19,8 @@ void _irq05Handler(void);
 void _irq10Handler(void);
 void _irq80Handler(void);
 
-void _exception0Handler(void);
+void _divideByZeroInterruption(void);
+void _invalidOpCodeInterruption(void);
 
 void _cli(void);
 

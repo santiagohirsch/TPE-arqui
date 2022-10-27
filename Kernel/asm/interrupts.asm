@@ -15,7 +15,8 @@ GLOBAL _irq05Handler
 GLOBAL _irq10Handler
 GLOBAL _irq80Handler
 
-GLOBAL _exception0Handler
+GLOBAL _divideByZeroInterruption
+GLOBAL _invalidOpCodeInterruption
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -81,6 +82,7 @@ SECTION .text
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro
+	;me guardo los registros
 	call exceptionDispatcher
 
 	popState
@@ -161,8 +163,13 @@ _irq80Handler:
 	iretq
 
 ;Zero Division Exception
-_exception0Handler:
-	exceptionHandler 0
+_divideByZeroInterruption:
+	exceptionHandler 00h
+
+;Invalid Op Code Exception
+_invalidOpCodeInterruption:
+	exceptionHandler 01h
+
 
 haltcpu:
 	cli
