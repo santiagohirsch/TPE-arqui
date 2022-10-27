@@ -81,7 +81,7 @@ SECTION .text
 %macro exceptionHandler 1
 	pushState
 	
-	mov rdi, %1 ; pasaje de parametro
+	
 	;me guardo los registros para imprimir
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
 	mov [regdata+(1*8)], rax
@@ -103,6 +103,7 @@ SECTION .text
 	mov [regdata+(15*8)], r14
 	mov [regdata+(16*8)], r15
 	mov [regdata+(17*8)], rax ;deberia ser rflags
+	mov rdi, %1 ; pasaje de parametro
 	mov rsi, regdata
 	call exceptionDispatcher
 
