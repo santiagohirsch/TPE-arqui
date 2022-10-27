@@ -2,6 +2,9 @@ GLOBAL loader
 GLOBAL restart
 extern main
 extern initializeKernelBinary
+extern getStackBase
+
+section .text
 
 loader:
 	call initializeKernelBinary	; Set up the kernel binary, and get thet stack address
