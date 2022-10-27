@@ -94,67 +94,8 @@ void scanf(char * format,...){
 		}
 	}
 	va_end(vl);
+	return;
 }
-/*
-uint64_t getScreenshot(){
-	return sys_screenshot();
-}
-
-void _scanf(char* format , ...){
-	va_list vl;
-    int i = 0, j=0, ret = 0;
-    char buff[100] = {0}, tmp[20], c;
-    char *out_loc;
-    while(c != '') 
-    {
-        if (fread(&c, 1, 1, stdin)) 
-        {
- 	       buff[i] = c;
- 	       i++;
- 	    }
- 	}
- 	va_start( vl, format );
- 	i = 0;
- 	while (format && format[i])
- 	{
- 	    if (format[i] == '%') 
- 	    {
- 	       i++;
- 	       switch (format[i]) 
- 	       {
- 	           case 'c': 
- 	           {
-	 	           *(char *)va_arg( vl, char* ) = buff[j];
-	 	           j++;
-	 	           ret ++;
-	 	           break;
- 	           }
- 	           case 'd': 
- 	           {
-	 	           *(int *)va_arg( vl, int* ) = _strtol(&buff[j], &out_loc, 10);
-	 	           j+=out_loc -&buff[j];
-	 	           ret++;
-	 	           break;
- 	            }
- 	            case 'x': 
- 	            {
-	 	           *(int *)va_arg( vl, int* ) = _strtol(&buff[j], &out_loc, 16);
-	 	           j+=out_loc -&buff[j];
-	 	           ret++;
-	 	           break;
- 	            }
- 	        }
- 	    } 
- 	    else 
- 	    {
- 	        buff[j] =format[i];
-            j++;
-        }
-        i++;
-    }
-    va_end(vl);
-    return ret;
-}*/
 
 void putChar(char c) {
 	sys_write(STDOUT, &c, 1);
