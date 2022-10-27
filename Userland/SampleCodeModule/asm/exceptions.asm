@@ -1,13 +1,12 @@
-GLOBAL excInvalidOpCode
-GLOBAL excDivideByZero
+GLOBAL exc_invalidOpCode
+GLOBAL exc_divideByZero
 
 section .text
-excInvalidOpCode:
-; veremos 
+exc_invalidOpCode:
+    mov cr6, rax
+    ret
 
-excDivideByZero:
-    mov rax,0
+exc_divideByZero:
+    mov rax, 0
     div rax
 	ret
-
-section .bss

@@ -7,6 +7,10 @@
 #define MAX_INT 18
 #define MAX_BUFFER 20
 
+
+extern void exc_divideByZero();
+extern void exc_invalidOpCode();
+
 void putString(const char *buffer){
     //lamo al syswrite 1=stdout
     sys_write(STDOUT, buffer, _strlen(buffer));
@@ -26,6 +30,15 @@ void getTime(char * buffer){
 	itoa(getFormat((time >> 16) & 0xFF), &p[6]);
     p[8] = 0;
 
+}
+
+void do_invalidOpCode(){
+	exc_invalidOpCode();
+}
+
+void do_divideByZero(){
+	printf("do_divide\n");
+	exc_divideByZero();
 }
 
 
