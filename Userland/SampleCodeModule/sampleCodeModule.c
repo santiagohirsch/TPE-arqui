@@ -8,7 +8,7 @@
 #define COMMANDS_LENGTH 9
 #define REGISTERS 17
 
-static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
+static const char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
 
 static const char* registerNames[REGISTERS] = {
     "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
@@ -16,8 +16,6 @@ static const char* registerNames[REGISTERS] = {
 
 /* COMMANDS */
 static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]);
-
-static void screenshot(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]);
 
@@ -33,7 +31,7 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 
-static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
 
 static int findIdxCommand(char *buff);
 static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
@@ -43,10 +41,12 @@ main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
 	printf("WELCOME! Type \"HELP\" for list\n");
-
 	while(1){
 		printf("$>");
 		// buffer para ver q comando me manda
+		/*char * string = {0};
+		scanf("%s",&string);
+		printf(string);*/
 		char buff_command[BUFFER_LENGTH] = {0};
 		// command
 		char command[COMMANDS_LENGTH] = {0};
@@ -122,7 +122,6 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	
 	const char* helpstring = 
 	"HELP                 Provides help information for commands.\n"
-	"SCREENSHOT           Register's screenshot.\n"
 	"INVALIDOPCODE        Command to verify the operation of the exception routine \"Invalid Opcode\"\n"
 	"DIVIDEBYZERO         Command to verify the operation of the exception routine \"Divide by zero\"\n"
 	"INFOREG              Prints on screen the value of all registers.\n"
@@ -132,18 +131,6 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	"CHANGEFONTSIZE       Changes font size.\n"
 	"TRON                 Get ready to play Tron!.\n";
 	printf(helpstring);
-}
-
-// 1 param: register
-static void screenshot(int argc, char params[][LENGTH_PARAMETERS]){
-	if (argc!=0){
-		printf("Try screenshot without parameters\n");
-		return;
-	}
-	//deberia agarrar el idx del parametro q me mandan y pasarselo a getScreenshot()
-	//por ahora pruebo q me imprima rax
-	//uint64_t info = getScreenshot();
-	//printf("screenshot de rip: %x\n", info);
 }
 
 //no params
@@ -179,22 +166,18 @@ static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	
 	if(argc != 1){
-		printf("Try printMem with %d parameter (memDir)\n", 1);
-		printf("Try printMem with %X parameter (memDir)\n", 16);
+		printf("Try printMem with one parameter (memDir)\n");
 		return;
 	}
-	for (int i= 0; i < REGISTERS;i++){
-		if( _strcmp(params[0], registerNames[i]) == 0){
-			printf("parametro correct: ");
-			printf(params[0]);
-			return;
-		}
+
+	if (checkMem(params[0])){ 
+		printf("funca\n");
+		/*uint64_t * mem;
+		stringToHexa(params[0], mem);*/
+	} else {
+		printf("no funca\n");
 	}
-	//si llegue aca no hubo param
-	printf("param incorrecto pete\n");
-	printf(params[0]);
-	printf("\n");
-	printf("fin de params\n");
+	
 }
 
 

@@ -1,5 +1,20 @@
 #include <stringUtil.h>
 #include <stdint.h>
+#define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
+
+int checkMem(char *mem){
+    uint64_t len = _strlen(mem);
+    //0x....
+    if (len < 2 || len > 18 || mem[0] != '0' || mem[1] != 'x'){
+        return 0;
+    }
+    for (int i = 2; i < len; i++){
+        if (!isHexa(mem[i])){
+            return 0;
+        }
+    }
+    return 1;
+}
 
 long atoi(char S[])
 {

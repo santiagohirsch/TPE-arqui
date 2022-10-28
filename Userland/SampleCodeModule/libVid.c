@@ -5,7 +5,7 @@
 #include <stdarg.h>
 
 #define MAX_INT 18
-#define MAX_BUFFER 20
+#define MAX_BUFFER 255
 
 void putString(const char *buffer){
     //lamo al syswrite 1=stdout
