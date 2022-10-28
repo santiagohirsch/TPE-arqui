@@ -2,7 +2,9 @@
 #include <font.h>
 #include <stdint.h>
 #include <string.h>
-
+#define FONT1 16
+#define FONT2 32
+#define FONT3 48
 struct vbe_mode_info_structure {
     uint16_t attributes;        // deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
     uint8_t window_a;           // deprecated
@@ -39,13 +41,18 @@ struct vbe_mode_info_structure {
     uint32_t off_screen_mem_off;
     uint16_t off_screen_mem_size;   // size of memory in the framebuffer but not being displayed on the screen
     uint8_t reserved1[206];
+
+    //uint8_t pixel_height; // alto del char, x1 = 16, x2 = 32
+    //uint8_t pixel_width; // ancho del char, x1 = 9, x2 = 16
+
 } __attribute__ ((packed));
 
 struct vbe_mode_info_structure* screenData = (void*)0x5C00;
 
 
+
 //    STATIC METHODS DECLARATION
-//
+
 static void* getPtrToPixel(uint16_t x, uint16_t y) {
     return (void*)(screenData->framebuffer + 3 * (x + (y * (uint64_t)screenData->width)));
 }
@@ -59,6 +66,15 @@ Color penColor = {0x7F, 0x7F, 0x7F};
 // ==============================================================================
 // PUBLIC NGC_PRINT METHODS
 
+void changeFontSize(void){
+   /* ngc_printNewline();
+    ngc_printChar(screenData->pixel_height + '0');
+    screenData->pixel_height++;
+    ngc_printChar(screenData->pixel_height + '0');
+    ngc_printNewline();
+    ngc_printChar(screenData->pixel_width + '0');
+    ngc_printNewline();*/
+}
 void ngc_printChar(char c) {
     if (c == '\n') {
         ngc_printNewline();
@@ -72,13 +88,13 @@ void ngc_printChar(char c) {
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
 	    const char* data = font + 32*(c-33);
         // cambiando h: cambio tam
-	    for (int h=0; h<16; h += 2) { //h a 16 queda estirado 
+	    for (int h=0; h<FONT2; h += 2) { //h a 16 queda estirado 
             //1x1 -> 4x4 -> 16x16
             // width orig (en x1) == 9
             // Imprimir en tamaño x2    
             Color* pos = (Color*)getPtrToPixel(penX, penY+h);
             Color* pos2 = (Color*)getPtrToPixel(penX, penY+h+1);
-            Color* pos3 = (Color*)getPtrToPixel(penX, penY+h+2);
+            //Color* pos3 = (Color*)getPtrToPixel(penX, penY+h+2); para q estaba muchachos ???? 
             // si el bit en cada posicion esta prendido: pinto, sino dejo
             if (*data & 0b00000001) pos[0] = penColor, pos[1] = penColor, pos2[0] = penColor, pos2[1] = penColor;       
             if (*data & 0b00000010) pos[2] = penColor, pos[3] = penColor, pos2[2] = penColor, pos2[3] = penColor;       
@@ -131,24 +147,24 @@ void ngc_printNewline(void) {
     if (penY + (2*CHAR_HEIGHT) <= screenData->height) {
         penY += 2*CHAR_HEIGHT;
     } else {
-
+        //AGREGANDO X2 PARA EL NUEVO TAM
         // dst: posicion de inicio de la pantalla
         void* dst = (void*)((uint64_t)screenData->framebuffer);
 
         // src: ultima posicion de la pantalla 
         // (3 por rgb, CHAR_HEIGHT es el tamaño de cada linea, width es el ancho de la pantalla)
-        void* src = (void*)(dst + 3 * (CHAR_HEIGHT * (uint64_t)screenData->width));
+        void* src = (void*)(dst + 3 * (CHAR_HEIGHT*2 * (uint64_t)screenData->width)); //char_height*2 para el aumento del size
         
         // len: cantidad de pixeles en toda la pantalla menos la ultima linea
         // 3 por rgb, width es el ancho, height - CHAR_HEIGHT es todas las lineas excepto la ultima
-        uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height - CHAR_HEIGHT));
+        uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height*2 - CHAR_HEIGHT*2)); //height*2 char_height*2 para el aumento del size
         
         /*
             este bloque copia todo lo escrito en pantalla a una linea mas arriba
             y deja la posicion para escribir en la ultima linea
         */
         memcpy(dst, src, len);
-        memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT);
+        memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT*2); //char_height*2 para el aumento del size
     }
 }
 // ==============================================================================
@@ -173,20 +189,14 @@ static void delete_last_char() {
         penX -= CHAR_WIDTH;
 
         Color aux = {0,0,0};
-
         
-        for (int h=0; h<16; h++) {
+        for (int h=0; h<FONT2; h++) {
             // se llenan todos los pixeles del ultimo char en {0,0,0}
     		Color* pos = (Color*)getPtrToPixel(penX, penY+h);
-    	    pos[0] = aux;
-    		pos[1] = aux;
-    		pos[2] = aux;
-    		pos[3] = aux;
-    		pos[4] = aux;
-    		pos[5] = aux;
-    		pos[6] = aux;
-            pos[7] = aux;
-    		pos[8] = aux; // resetteo el espaciado aunque ya este seteado
+            
+            for (int i = 0 ;i < FONT2/2 ; i++){
+                pos[i]=aux;
+            }
     	}
     }
     
