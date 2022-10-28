@@ -1,13 +1,15 @@
 #include <stringUtil.h>
+#include <libVid.h>
 #include <stdint.h>
 #define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
 
-int checkMem(char *mem){
+int checkMem(char mem[]){
     uint64_t len = _strlen(mem);
-    //0x....
+    //0x........ -> if it matches ^0x[a-fA-F0-9]{16}
     if (len < 2 || len > 18 || mem[0] != '0' || mem[1] != 'x'){
         return 0;
     }
+
     for (int i = 2; i < len; i++){
         if (!isHexa(mem[i])){
             return 0;
@@ -16,9 +18,35 @@ int checkMem(char *mem){
     return 1;
 }
 
-long atoi(char S[])
+uint64_t hexStrToInt(char* s) {
+    int i = 0;
+    int len = _strlen(s);
+    uint64_t res = 0;
+
+    // check if s begins with 0x
+    if(*s == '0' || *(s+1) == 'x') i = 2;
+
+    // error numero mucho grande
+    if (len - i > 32) return 0;
+
+    for(; i < len; ++i) {
+        if (s[i] >= '0' && s[i] <= '9')
+            res = res*16 + (s[i]-'0');
+        else 
+        if (s[i] >= 'a' && s[i] <= 'f')
+            res = res*16 + (s[i]-'a'+10);
+        else
+        if (s[i] >= 'A' && s[i] <= 'F')
+            res = res*16 + (s[i]-'A'+10);
+        
+    }
+
+    return res;
+}
+
+uint64_t atoi(char S[])
 {
-    long num = 0;
+    uint64_t num = 0;
     int i = 0;
     // run till the end of the string is reached, or the
     // current character is non-numeric
@@ -66,11 +94,11 @@ void _strcpy(char * dest, char * src, int n){
     *dest = '\0';
 }
 
-uint64_t _strlen(const char * str){
+uint64_t _strlen(char str[]){
 	uint64_t ans = 0;
-    while(*str != '\0'){
+    while(str[ans] != '\0'){
         ans++;
-        str++;
+        //str++;
     }
 	return ans;
 }

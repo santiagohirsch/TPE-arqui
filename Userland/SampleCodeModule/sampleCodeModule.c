@@ -3,9 +3,9 @@
 #include <stringUtil.h>
 
 #define MAX_PARAMETERS 5
-#define LENGTH_PARAMETERS 20
-#define BUFFER_LENGTH 20
-#define COMMANDS_LENGTH 9
+#define LENGTH_PARAMETERS 256
+#define BUFFER_LENGTH 256
+#define COMMANDS_LENGTH 12
 #define REGISTERS 17
 
 static const char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
@@ -44,16 +44,14 @@ main() {
 	while(1){
 		printf("$>");
 		// buffer para ver q comando me manda
-		/*char * string = {0};
-		scanf("%s",&string);
-		printf(string);*/
+		char * string = {0};
 		char buff_command[BUFFER_LENGTH] = {0};
 		// command
 		char command[COMMANDS_LENGTH] = {0};
 		// parametros enviados junto al comando
 		char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
 		scan(buff_command, BUFFER_LENGTH); //sys_read de todo
-	
+
 		int size = parseBuffer(command, parameters, buff_command);
 
 		int idx = findIdxCommand(command);
@@ -161,6 +159,14 @@ static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 	getInfoReg();
 }
 
+static void intToHex(uint64_t num, char buffer[16]){
+	int i = 15;
+	while (i-- != 0){
+		int digit = num % 16;
+        buffer[i] = (digit < 10 ? '0' : ('A' - 10)) + digit;
+        num /= 16;
+	}
+}
 
 //1 param: memDirec
 static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
@@ -171,11 +177,14 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	}
 
 	if (checkMem(params[0])){ 
-		printf("funca\n");
-		/*uint64_t * mem;
-		stringToHexa(params[0], mem);*/
+		uint8_t * mem;
+		mem = hexStrToInt(params[0]);
+		for (int i = 0; i < 32; i++){
+			printf("%x\n", mem[i]);
+		}
+		
 	} else {
-		printf("no funca\n");
+		printf("Parameter is not a valid memory address. It must be a hex number started with 0x\n");
 	}
 	
 }
