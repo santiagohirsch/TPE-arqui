@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define MAX_LENGTH 20
+#define MAX_LENGTH 256
 
 static const uint8_t charHexMap[256] = {       
         0,    0,  '1',  '2',  '3',  '4',  '5',  '6',   '7',  '8',  '9',   '0',   '-',  '=',    0x7F,
