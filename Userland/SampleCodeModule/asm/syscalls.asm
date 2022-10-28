@@ -1,7 +1,7 @@
 GLOBAL sys_write
 GLOBAL sys_read
 GLOBAL sys_time
-GLOBAL sys_screenshot
+;GLOBAL sys_screenshot
 
 section .text
 sys_read:

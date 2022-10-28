@@ -20,9 +20,9 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]);
 
 static void screenshot(int argc, char params[][LENGTH_PARAMETERS]);
 
-static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]);
+static void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]);
 
-static void divideByZero(int argc, char params[][LENGTH_PARAMETERS]);
+static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]);
 
 static void inforeg(int argc, char params[][LENGTH_PARAMETERS]);
 
@@ -34,7 +34,7 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 
-static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode ,divideByZero, inforeg, printMem, time, changeFontSize, tron};
 
 static int findIdxCommand(char *buff);
 static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
@@ -148,6 +148,16 @@ static void screenshot(int argc, char params[][LENGTH_PARAMETERS]){
 }
 
 //no params
+static void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
+	if(argc!=0){
+		printf("Try divideByZero without parameters\n");
+		return;
+	}
+	printf("Divide by Zero\n");
+	do_divisionByZero();
+}
+
+//no params
 static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
 		printf("Try invalidOpCode without parameters\n");
@@ -155,16 +165,6 @@ static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 	}
 	printf("Invalid Op Code\n");
 	do_invalidOpCode();
-}
-
-//no params
-static void divideByZero(int argc, char params[][LENGTH_PARAMETERS]){ 
-	if(argc!=0){
-		printf("Try dividebyzero without parameters\n");
-		return;
-	}
-	printf("divide by zero\n");
-	do_divideByZero();
 }
 
 //no params

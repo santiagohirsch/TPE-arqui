@@ -26,10 +26,15 @@ void load_idt() {
 
   _cli(); //para llamar varias veces al load_idt();
 
-    setup_IDT_entry (0x00, (uint64_t)&_divideByZeroInterruption);
+    // Exceptions
+    setup_IDT_entry (0x00, (uint64_t)&_divisionByZeroInterruption);
 	  setup_IDT_entry (0x06, (uint64_t)&_invalidOpCodeInterruption);
+
+    // Hardware Interruptions
     setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
     setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);
+
+    // Syscalls Interruptions
     setup_IDT_entry (0x80, (uint64_t)&_irq80Handler);
     
 
@@ -37,7 +42,7 @@ void load_idt() {
   // Para habilitar las interrupciones de teclado 0xFD en masterMask
   // Para habilitar ambas 0xFC en masterMask
 	picMasterMask(0b11111100);
-	picSlaveMask(0b11111111);
+	picSlaveMask (0b11111111);
         
 	_sti();
 }

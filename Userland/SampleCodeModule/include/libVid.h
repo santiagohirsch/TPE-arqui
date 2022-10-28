@@ -10,7 +10,7 @@ void scanf(char* format, ...);
 
 void getTime(char * buffer);
 
-void do_divideByZero();
+void do_divisionByZero();
 
 void do_invalidOpCode();
 

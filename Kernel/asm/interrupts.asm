@@ -1,10 +1,9 @@
-
-GLOBAL _cli
-GLOBAL _sti
 GLOBAL picMasterMask
 GLOBAL picSlaveMask
 GLOBAL haltcpu
 GLOBAL _hlt
+GLOBAL _cli
+GLOBAL _sti
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
@@ -15,8 +14,9 @@ GLOBAL _irq05Handler
 GLOBAL _irq10Handler
 GLOBAL _irq80Handler
 
-GLOBAL _divideByZeroInterruption
+
 GLOBAL _invalidOpCodeInterruption
+GLOBAL _divisionByZeroInterruption
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -81,7 +81,6 @@ SECTION .text
 %macro exceptionHandler 1
 	pushState
 	
-	
 	;me guardo los registros para imprimir
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
 	mov [regdata+(1*8)], rax
@@ -144,28 +143,22 @@ picSlaveMask:
 
 
 ;8254 Timer (Timer Tick)
-_irq00Handler:
-	irqHandlerMaster 0
+_irq00Handler: irqHandlerMaster 0
 
 ;Keyboard
-_irq01Handler:
-	irqHandlerMaster 1
+_irq01Handler: irqHandlerMaster 1
 
 ;Cascade pic never called
-_irq02Handler:
-	irqHandlerMaster 2
+_irq02Handler: irqHandlerMaster 2
 
 ;Serial Port 2 and 4
-_irq03Handler:
-	irqHandlerMaster 3
+_irq03Handler: irqHandlerMaster 3
 
 ;Serial Port 1 and 3
-_irq04Handler:
-	irqHandlerMaster 4
+_irq04Handler: irqHandlerMaster 4
 
 ;USB
-_irq05Handler:
-	irqHandlerMaster 5
+_irq05Handler: irqHandlerMaster 5
 
 
 ;Syscall
@@ -183,7 +176,7 @@ _irq80Handler:
 	iretq
 
 ;Zero Division Exception
-_divideByZeroInterruption:
+_divisionByZeroInterruption:
 	exceptionHandler 00h
 
 ;Invalid Op Code Exception
@@ -195,8 +188,6 @@ haltcpu:
 	cli
 	hlt
 	ret
-
-
 
 SECTION .bss
 	aux resq 1

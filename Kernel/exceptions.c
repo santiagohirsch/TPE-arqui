@@ -5,7 +5,7 @@
 #define INV_OP_EXC 6
 #define REGISTERS 18
 extern void restart();
-static void zero_division();
+
 static void invalid_opcode();
 
 static const char* registerNames[REGISTERS] = {
@@ -14,7 +14,7 @@ static const char* registerNames[REGISTERS] = {
 
 static const char* errMsg = "The program aborted due to an exception: ";
 
-static const char* errNames[2] = {"Divide by Zero\n", "Invalid Operation Code\n"};
+static const char* errNames[7] = {"Divide by Zero\n", "","","","","","Invalid Operation Code\n"};
 
 static const Color red = {0x00, 0x00, 0xFF};
 //Transforma un int a un hexadecimal de 16 char (para que queden todos los registros de la misma longitud)
@@ -44,20 +44,8 @@ static void printRegisters(uint64_t reg[18]){
 }
 
 void exceptionDispatcher(uint64_t exception, uint64_t regdata[18]) {
-	if (exception == ZERO_EXCEPTION_ID) 	zero_division(regdata);
-	if (exception == INV_OP_EXC) 	invalid_opcode(regdata);
-}
-
-static void zero_division(uint64_t reg[18]){
 	ngc_printColor(errMsg, red);
-	ngc_printColor(errNames[0], red);
-	printRegisters(reg);
-	restart();
-}
-
-static void invalid_opcode(uint64_t reg[18]){
-	ngc_printColor(errMsg, red);
-	ngc_printColor(errNames[1], red);
-	printRegisters(reg);
+	ngc_printColor(errNames[exception], red);
+	printRegisters(regdata);
 	restart();
 }

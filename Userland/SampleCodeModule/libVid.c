@@ -8,8 +8,9 @@
 #define MAX_BUFFER 20
 
 
-extern void exc_divideByZero();
+
 extern void exc_invalidOpCode();
+extern void exc_divisionByZero();
 
 void putString(const char *buffer){
     //lamo al syswrite 1=stdout
@@ -32,14 +33,15 @@ void getTime(char * buffer){
 
 }
 
+void do_divisionByZero(){
+	exc_divisionByZero();
+}
+
 void do_invalidOpCode(){
 	exc_invalidOpCode();
 }
 
-void do_divideByZero(){
-	printf("do_divide\n");
-	exc_divideByZero();
-}
+
 
 
 int strtoi(char * buffer, int * i){

@@ -19,7 +19,7 @@ extern void _irq05Handler(void);
 extern void _irq10Handler(void);
 extern void _irq80Handler(void);
 
-extern void _divideByZeroInterruption(void);
+extern void _divisionByZeroInterruption(void);
 extern void _invalidOpCodeInterruption(void);
 
 extern void _cli(void);
