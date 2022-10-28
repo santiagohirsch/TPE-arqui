@@ -2,6 +2,7 @@ GLOBAL sys_write
 GLOBAL sys_read
 GLOBAL sys_time
 GLOBAL sys_inforeg
+GLOBAL sys_changeFontSize
 
 section .text
 sys_read:
@@ -18,5 +19,9 @@ sys_time:
     ret
 sys_inforeg:
     mov rax, 0x03
+    int 80h
+    ret
+sys_changeFontSize:
+    mov rax, 0x04
     int 80h
     ret

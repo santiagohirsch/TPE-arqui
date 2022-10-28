@@ -3,6 +3,7 @@
 #include <string.h>
 #include <keyboard.h>
 #include <naiveRTC.h>
+#include <naiveGraphicsConsole.h>
 
 extern uint64_t info[17];
 extern uint8_t screenshot;
@@ -45,7 +46,11 @@ static uint8_t sys_inforeg_handler(uint64_t regVec[17]){
     return screenshot;
 }
 
-static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler};
+static void sys_font_handler(){
+    changeFontSize();
+}
+
+static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por eax
 void syscallDispatcher(void * rdi, void * rsi, void * rdx, void * rcx, void * r8, uint64_t rax){
