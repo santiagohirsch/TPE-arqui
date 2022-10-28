@@ -45,7 +45,7 @@ main() {
 	printf("WELCOME! Type \"HELP\" for list\n");
 
 	while(1){
-		printf("$>");
+		//printf("$>");
 		// buffer para ver q comando me manda
 		char buff_command[BUFFER_LENGTH] = {0};
 		// command
