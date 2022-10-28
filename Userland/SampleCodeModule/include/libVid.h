@@ -10,4 +10,7 @@ void scanf(char* format, ...);
 void getTime(char * buffer);
 
 void getInfoReg();
+
+void do_changeFontSize();
+
 #endif

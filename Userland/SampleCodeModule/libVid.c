@@ -7,6 +7,10 @@
 #define MAX_INT 18
 #define MAX_BUFFER 20
 
+void do_changeFontSize(){
+	sys_changeFontSize();
+}
+
 void putString(const char *buffer){
     //lamo al syswrite 1=stdout
     sys_write(STDOUT, buffer, _strlen(buffer));

@@ -45,7 +45,7 @@ main() {
 	printf("WELCOME! Type \"HELP\" for list\n");
 
 	while(1){
-		//printf("$>");
+		printf("$>");
 		// buffer para ver q comando me manda
 		char buff_command[BUFFER_LENGTH] = {0};
 		// command
@@ -206,7 +206,10 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 		printf("Try change font size with 1 parameter (setting)\n");
 		return;
 	}
-	printf("change font size\n");
+	/*if (param[0]){
+
+	}*/
+	do_changeFontSize();
 }
 
 //no params
