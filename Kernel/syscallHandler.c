@@ -35,7 +35,14 @@ static uint64_t sys_time_handler(){
 
 static void sys_clear_screen_handler() {
     Color black = {0, 0, 0};
+    Color gray = {0x7f,0x7f,0x7f};
+    Color white = {0xFF, 0xFF, 0xFF};
+    Color red = {0, 0, 0xFF};
+
     ngc_paint_screen(black);
+    ngc_print_pixels(150, 200, 80, 50, white);
+    ngc_print_pixels(200, 200, 80, 50, red);
+    ngc_print_pixels(250, 200, 80, 50, white);
 }
 
 static uint64_t sys_screenshot_handler(){
