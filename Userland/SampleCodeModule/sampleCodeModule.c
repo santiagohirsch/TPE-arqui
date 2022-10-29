@@ -34,6 +34,7 @@ static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
 
 static int findIdxCommand(char *buff);
+
 static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
 
 int 
@@ -156,7 +157,7 @@ static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 		return;
 	}
 	printf("info reg\n");
-	getInfoReg();
+	printInfoReg();
 }
 
 static void intToHex(uint64_t num, char buffer[16]){
@@ -176,19 +177,22 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		return;
 	}
 
-	if (checkMem(params[0])){ 
-		uint8_t * mem;
-		mem = hexStrToInt(params[0]);
-		for (int i = 0; i < 32; i++){
-			printf("%x\n", mem[i]);
-		}
-		
-	} else {
+	if (!checkMem(params[0])){
 		printf("Parameter is not a valid memory address. It must be a hex number started with 0x\n");
+		return;
 	}
-	
-}
 
+	// we store in mem the pointer to the first memory we want to print
+	uint8_t * mem;
+	mem = hexStrToInt(params[0]);
+
+	// we print the 32 bytes that follow *mem
+	for (int i = 0; i < 32; i++){
+		printf("%x\t", mem[i]);
+	}
+	printf("\n");
+
+}
 
 //1 param: setting
 static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
