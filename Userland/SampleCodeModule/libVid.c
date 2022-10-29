@@ -204,14 +204,15 @@ void putBase(int num, int base){
 	int i = 255;
 	int j = 0;
 
-	char hex[256];
+	char hex[256] = {0};
 
 	putString("0x");
 
 	// la unidad minima es 1 byte
-	if (num <= 16) {
-		putChar('0');
-		putChar(num >= 10 ? (num - 10 + 'A') : (num + '0'));
+	if (num < 16) {
+		hex[0] = '0';
+		hex[1] = num >= 10 ? (num - 10 + 'A') : (num + '0');
+		putString(hex);
 		return;
 	}
 	

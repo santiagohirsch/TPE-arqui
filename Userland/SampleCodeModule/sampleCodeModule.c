@@ -186,8 +186,13 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	uint8_t * mem;
 	mem = hexStrToInt(params[0]);
 
+	int i = 0;
 	// we print the 32 bytes that follow *mem
-	for (int i = 0; i < 32; i++){
+	for (; i < 16; i++){
+		printf("%x\t", mem[i]);
+	}
+	printf("\n");
+	for (;i < 32; i++) {
 		printf("%x\t", mem[i]);
 	}
 	printf("\n");
