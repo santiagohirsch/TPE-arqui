@@ -169,7 +169,10 @@ static void intToHex(uint64_t num, char buffer[16]){
 	}
 }
 
+
+
 static char byteHexToChar(uint8_t value) {
+	printf("%d ",value);
 	return value >= 10 ? (value - 10 + 'A') : (value + '0');
 }
 
@@ -189,18 +192,17 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	// we store in mem the pointer to the first memory we want to print
 	uint8_t * mem;
 	mem = hexStrToInt(params[0]);
-
 	// we print the 32 bytes that follow *mem
 	for (int i = 0; i < 32; i++){
 		if (i == 16) {
 			printf("\n");
 		}
-		char buffer[5] = "0x00 ";
-		buffer[2] = byteHexToChar(mem[i] & 0xF0);	// first hex value
+		char  buffer[6] = "0x00 ";
+		buffer[2] = byteHexToChar((mem[i] & 0xF0 ) >> 4);	// first hex value
 		buffer[3] = byteHexToChar(mem[i] & 0x0F);	
 		printf(buffer);
 	}
-
+	printf("\n");
 }
 
 //1 param: setting
