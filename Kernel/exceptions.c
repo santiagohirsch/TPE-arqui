@@ -4,9 +4,9 @@
 #define ZERO_EXCEPTION_ID 0
 #define INV_OP_EXC 6
 #define REGISTERS 18
-extern void restart();
 
-static void invalid_opcode();
+
+extern void restart();
 
 static const char* registerNames[REGISTERS] = {
     "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8 ", "r9 ", "r10", "r11", "r12", "r13", "r14", "r15", "rflags"
@@ -32,8 +32,7 @@ static void printRegisters(uint64_t reg[18]){
 	buf[0] = '0';
 	buf[1] = 'x';
 	buf[18] = '\0';
-	for (int i = 0; i < REGISTERS; i++)
-	{
+	for (int i = 0; i < REGISTERS; i++){
 		ngc_printColor(registerNames[i], red);
 		ngc_printColor(" : ", red);
 		intToHex(reg[i], buf + 2);
