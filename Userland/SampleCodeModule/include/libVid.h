@@ -9,8 +9,8 @@ void scanf(char* format, ...);
 
 void getTime(char * buffer);
 
-void getInfoReg();
+void printInfoReg();
 
-void do_changeFontSize();
+void do_changeFontSize(uint64_t level);
 
 #endif

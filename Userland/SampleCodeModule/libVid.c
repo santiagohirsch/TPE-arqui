@@ -5,7 +5,7 @@
 #include <stdarg.h>
 
 #define MAX_INT 18
-#define MAX_BUFFER 20
+#define MAX_BUFFER 255
 
 void do_changeFontSize(uint64_t level){
 	sys_changeFontSize(level);
@@ -33,21 +33,31 @@ void getTime(char * buffer){
 }
 
 
-int strtoi(char * buffer, int * i){
+uint64_t strtoi(char * buffer, int * i){
 	char strnum[MAX_INT];
 	int numsize=0;
 	while(buffer[*i] != ' ' && buffer[*i] != '\n' && buffer[*i] != '\0'){
 		strnum[numsize++] = buffer[*i];
 		(*i)++;
 	}
-	int out = atoi(strnum);
+	uint64_t out = atoi(strnum);
+	return out;
+}
+
+char * getRestOfString(char string[]){
+	return string;
+}
+
+int getChar(){
+	char out;
+	sys_read(KDBIN, &out, 1);
 	return out;
 }
 
 //en  fmt nos pasa formato ... nos van a mandar las variables a dnd asignar
 void scanf(char * format,...){
-	va_list vl;
-
+	char * str = {0};
+	int len = 0;
 	//lectura del buffer
 	char buffer[MAX_BUFFER];
 	sys_read(KDBIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
@@ -57,7 +67,9 @@ void scanf(char * format,...){
 		printf("uso incorrecto de scanf\n");
 		return;
 	}
-	va_start(vl,format);
+
+	va_list vl;
+	va_start(vl, format);
 	int buffIdx = 0;
 	while (*format != '\0'){
 		if(*format != '%'){ //letra o espacio
@@ -86,7 +98,11 @@ void scanf(char * format,...){
                 	break;
             	case 's':
 				case 'S':
-					*(char *)va_arg( vl, char* ) = buffer;
+					while(buffer[buffIdx]!= '\0'){
+						str[len++]= buffer[buffIdx++];
+					}
+					str[len] = buffer[buffIdx];
+					*(char *)va_arg( vl, char* ) = str;
                 	//putString(va_arg(p_arg, char *));
                 	break;
 				case ' ':
@@ -100,7 +116,7 @@ void scanf(char * format,...){
 	va_end(vl);
 }
 
-void getInfoReg(){
+void printInfoReg(){
 	uint64_t reg[17];
 	uint8_t huboScreenshot = sys_inforeg(reg);
 	if (huboScreenshot){
@@ -188,20 +204,30 @@ void putChar(char c) {
 }
 
 void putBase(int num, int base){
-
-	int i = 12;
+	
+	int i = 255;
 	int j = 0;
 
-	char hex[13];
+	char hex[256] = {0};
 
 	putString("0x");
-	do{
-		hex[i] = "0123456789ABCDEF"[num % base];
-		i--;
-		num = num/base;
-	}while( num > 0 );
 
-	while( ++i < 13){
+	// la unidad minima es 1 byte
+	if (num < 16) {
+		hex[0] = '0';
+		hex[1] = num >= 10 ? (num - 10 + 'A') : (num + '0');
+		putString(hex);
+		return;
+	}
+	
+	do {
+		hex[i] = "0123456789ABCDEF"[num%base];
+		i--;
+		num /= base;
+	} while (num > 0);
+
+
+	while( ++i < 256){
 		hex[j++] = hex[i];
 	}
 
@@ -210,7 +236,6 @@ void putBase(int num, int base){
 	putString(hex);
 }
 
-
 void putInt(int num){
 	char strnum[MAX_INT];
 	itoa(num,strnum);
@@ -218,8 +243,7 @@ void putInt(int num){
 }
 
 // para una cantidad de argumentos variable usamos la lib stdarg.h
-void printf (const char *format, ...)
-{
+void printf (const char *format, ...) {
 	// point p_arg to first argument
    	va_list p_arg;
    	va_start(p_arg, format); // -> hace apuntar p_arg al primer argumento (no format)
@@ -261,4 +285,3 @@ void printf (const char *format, ...)
 	
     va_end(p_arg);
 }
-
