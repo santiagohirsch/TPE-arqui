@@ -112,7 +112,7 @@ void scanf(char * format,...){
 	va_end(vl);
 }
 
-void getInfoReg(){
+void printInfoReg(){
 	uint64_t reg[17];
 	uint8_t huboScreenshot = sys_inforeg(reg);
 	if (huboScreenshot){
@@ -201,21 +201,28 @@ void putChar(char c) {
 
 void putBase(int num, int base){
 	
-	int i = 16;
+	int i = 255;
 	int j = 0;
 
-	char hex[17];
+	char hex[256];
 
 	putString("0x");
 
-	while(i > 0){
+	// la unidad minima es 1 byte
+	if (num <= 16) {
+		putChar('0');
+		putChar(num >= 10 ? (num - 10 + 'A') : (num + '0'));
+		return;
+	}
+	
+	do {
 		hex[i] = "0123456789ABCDEF"[num%base];
 		i--;
-		num/=base;
-	}
+		num /= base;
+	} while (num > 0);
 
 
-	while( ++i < 17){
+	while( ++i < 256){
 		hex[j++] = hex[i];
 	}
 
@@ -223,7 +230,6 @@ void putBase(int num, int base){
 
 	putString(hex);
 }
-
 
 void putInt(int num){
 	char strnum[MAX_INT];
