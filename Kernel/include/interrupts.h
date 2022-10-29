@@ -10,28 +10,29 @@
 
 #include <idtLoader.h>
 
-void _irq00Handler(void);
-void _irq01Handler(void);
-void _irq02Handler(void);
-void _irq03Handler(void);
-void _irq04Handler(void);
-void _irq05Handler(void);
-void _irq10Handler(void);
-void _irq80Handler(void);
+extern void _irq00Handler(void);
+extern void _irq01Handler(void);
+extern void _irq02Handler(void);
+extern void _irq03Handler(void);
+extern void _irq04Handler(void);
+extern void _irq05Handler(void);
+extern void _irq10Handler(void);
+extern void _irq80Handler(void);
 
-void _exception0Handler(void);
+extern void _divisionByZeroInterruption(void);
+extern void _invalidOpCodeInterruption(void);
 
-void _cli(void);
+extern void _cli(void);
 
-void _sti(void);
+extern void _sti(void);
 
-void _hlt(void);
+extern void _hlt(void);
 
-void picMasterMask(uint8_t mask);
+extern void picMasterMask(uint8_t mask);
 
-void picSlaveMask(uint8_t mask);
+extern void picSlaveMask(uint8_t mask);
 
 //Termina la ejecución de la cpu.
-void haltcpu(void);
+extern void haltcpu(void);
 
 #endif /* INTERRUPS_H_ */

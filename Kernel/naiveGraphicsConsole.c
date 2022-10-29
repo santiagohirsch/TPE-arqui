@@ -63,6 +63,18 @@ Color penColor = {0x7F, 0x7F, 0x7F};
 // ==============================================================================
 // PUBLIC NGC_PRINT METHODS
 
+void ngc_setColor(Color newColor){
+    penColor = newColor;
+}
+
+
+void ngc_printColor(char * string, Color color){
+    ngc_setColor(color);
+    ngc_print(string);
+    Color gray = {0x7F, 0x7F, 0x7F}; //reset to default print color
+    ngc_setColor(gray);
+}
+
 void changeFontSize(uint64_t newLevel){
     level = newLevel;
 }

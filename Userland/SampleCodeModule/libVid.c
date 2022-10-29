@@ -32,8 +32,15 @@ void getTime(char * buffer){
 
 }
 
+void do_divisionByZero(){
+	exc_divisionByZero();
+}
 
-uint64_t strtoi(char * buffer, int * i){
+void do_invalidOpCode(){
+	exc_invalidOpCode();
+}
+
+int strtoi(char * buffer, int * i){
 	char strnum[MAX_INT];
 	int numsize=0;
 	while(buffer[*i] != ' ' && buffer[*i] != '\n' && buffer[*i] != '\0'){

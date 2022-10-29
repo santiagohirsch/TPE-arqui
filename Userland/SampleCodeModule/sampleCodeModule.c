@@ -19,8 +19,6 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]);
 
 static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]);
 
-static void divideByZero(int argc, char params[][LENGTH_PARAMETERS]);
-
 static void inforeg(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void printMem(int argc, char params[][LENGTH_PARAMETERS]);
@@ -133,21 +131,33 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 }
 
 //no params
+static void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
+	if(argc!=0){
+		printf("Try divideByZero without parameters\n");
+		return;
+	}
+	printf("Divide by Zero\n");
+	do_divisionByZero();
+}
+
+//no params
 static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
 		printf("Try invalidOpCode without parameters\n");
 		return;
 	}
-	printf("invalidOPcode\n");
+	printf("Invalid Op Code\n");
+	do_invalidOpCode();
 }
 
-//no params
-static void divideByZero(int argc, char params[][LENGTH_PARAMETERS]){ 
-	if(argc!=0){
-		printf("Try dividebyzero without parameters\n");
-		return;
+
+static void intToHex(uint64_t num, char buffer[16]){
+	int i = 15;
+	while (i-- != 0){
+		int digit = num % 16;
+        buffer[i] = (digit < 10 ? '0' : ('A' - 10)) + digit;
+        num /= 16;
 	}
-	printf("divide by zero\n");
 }
 
 //no params
@@ -159,17 +169,6 @@ static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 	printf("info reg\n");
 	printInfoReg();
 }
-
-static void intToHex(uint64_t num, char buffer[16]){
-	int i = 15;
-	while (i-- != 0){
-		int digit = num % 16;
-        buffer[i] = (digit < 10 ? '0' : ('A' - 10)) + digit;
-        num /= 16;
-	}
-}
-
-
 
 static char byteHexToChar(uint8_t value) {
 	printf("%d ",value);
