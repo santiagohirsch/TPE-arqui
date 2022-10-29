@@ -129,7 +129,7 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	"PRINTMEM             Receives as argument a pointer and performs a memory dump of 32 bytes from the\n"
 	".                    Address received as an argument.\n"
 	"TIME                 Command to display the system day and time.\n"
-	"CHANGEFONTSIZE       Changes font size.\n"
+	"CHANGEFONTSIZE       Changes font size: insert 1 2 3 for the desired level.\n"
 	"TRON                 Get ready to play Tron!.\n";
 	printf(helpstring);
 }
@@ -200,16 +200,28 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 
 //1 param: setting
 static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
-	/*for(int i=0;i<argc;i++)
-		print("a");*/
+	int everythingOk = 1;
 	if(argc != 1){
 		printf("Try change font size with 1 parameter (setting)\n");
 		return;
 	}
-	/*if (param[0]){
-
-	}*/
-	do_changeFontSize();
+	if (params[0][0] == '1' || params[0][0] == '2' || params[0][0] == '3' ){
+		if(params[0][0] == '3'){
+			//everythingOk = 0;
+			printf("Warning, font size 3 is way too big!\n");
+			/*printf("Type 'yes' if you still want to change the font: ");
+			char*ans;
+			scanf("%s",ans);
+			printf(ans);
+			if(_strcmp(ans, "yes") == 0) everythingOk = 1;*/
+		}
+		if (everythingOk) do_changeFontSize(params[0][0]-'0');
+		
+	}
+	else{
+		printf("Invalid parameter, try with 1, 2 or 3\n");
+	}
+	return;
 }
 
 //no params

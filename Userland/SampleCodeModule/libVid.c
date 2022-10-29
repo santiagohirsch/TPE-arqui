@@ -7,8 +7,8 @@
 #define MAX_INT 18
 #define MAX_BUFFER 20
 
-void do_changeFontSize(){
-	sys_changeFontSize();
+void do_changeFontSize(uint64_t level){
+	sys_changeFontSize(level);
 }
 
 void putString(const char *buffer){
