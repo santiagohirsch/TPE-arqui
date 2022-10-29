@@ -169,7 +169,7 @@ static void intToHex(uint64_t num, char buffer[16]){
 	}
 }
 
-static char byteHexToChar(uint8_t hex) {
+static char byteHexToChar(uint8_t value) {
 	return value >= 10 ? (value - 10 + 'A') : (value + '0');
 }
 

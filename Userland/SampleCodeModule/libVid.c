@@ -204,30 +204,20 @@ void putChar(char c) {
 }
 
 void putBase(int num, int base){
-	
-	int i = 255;
+
+	int i = 12;
 	int j = 0;
 
-	char hex[256] = {0};
+	char hex[13];
 
 	putString("0x");
-
-	// la unidad minima es 1 byte
-	if (num < 16) {
-		hex[0] = '0';
-		hex[1] = num >= 10 ? (num - 10 + 'A') : (num + '0');
-		putString(hex);
-		return;
-	}
-	
-	do {
-		hex[i] = "0123456789ABCDEF"[num%base];
+	do{
+		hex[i] = "0123456789ABCDEF"[num % base];
 		i--;
-		num /= base;
-	} while (num > 0);
+		num = num/base;
+	}while( num > 0 );
 
-
-	while( ++i < 256){
+	while( ++i < 13){
 		hex[j++] = hex[i];
 	}
 
