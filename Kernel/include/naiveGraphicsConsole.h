@@ -2,8 +2,8 @@
 #define NAIVE_GRAPHICS_CONSOLE_H
 
 #include <stdint.h>
-#define CHAR_WIDTH 18 //18 para imprimir x2
-#define CHAR_HEIGHT 16 //32 para imprimir x2
+#define CHAR_WIDTH 9 
+#define CHAR_HEIGHT 16 
 
 enum Dir {DOWN = 0, UP = 1};
 
@@ -20,6 +20,6 @@ void ngc_printChar(char c);
 
 void ngc_print(char * s);
 
-void changeFontSize(void);
+void changeFontSize(uint64_t newlevel);
 
 #endif

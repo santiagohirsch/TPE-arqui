@@ -46,8 +46,8 @@ static uint8_t sys_inforeg_handler(uint64_t regVec[17]){
     return screenshot;
 }
 
-static void sys_font_handler(){
-    changeFontSize();
+static void sys_font_handler(uint64_t level){
+    changeFontSize(level);
 }
 
 static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler};
