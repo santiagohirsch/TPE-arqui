@@ -209,11 +209,11 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 		if(params[0][0] == '3'){
 			//everythingOk = 0;
 			printf("Warning, font size 3 is way too big!\n");
-			/*printf("Type 'yes' if you still want to change the font: ");
+			printf("Type 'yes' if you still want to change the font: ");
 			char*ans;
 			scanf("%s",ans);
 			printf(ans);
-			if(_strcmp(ans, "yes") == 0) everythingOk = 1;*/
+			if(_strcmp(ans, "yes") == 0) everythingOk = 1;
 		}
 		if (everythingOk) do_changeFontSize(params[0][0]-'0');
 		
