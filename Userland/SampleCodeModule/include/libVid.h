@@ -2,12 +2,15 @@
 #define LIBVID_H
 
 #include <stdint.h>
+#include <colors.h>
 
 void printf(const char *format, ...);
 
 void scanf(char* format, ...);
 
 void getTime(char * buffer);
+
+void do_clearScreen(Color color);
 
 void do_divisionByZero();
 

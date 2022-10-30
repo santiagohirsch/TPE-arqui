@@ -35,6 +35,10 @@ static uint64_t sys_time_handler(){
     return (_NRTCGetHours()) | ((uint64_t)_NRTCGetMins() << 8) | ((uint64_t)_NRTCGetSeconds() << 16);
 }
 
+static void sys_clear_screen_handler(Color color) {
+    ngc_paint_screen(color);
+}
+
 static uint8_t sys_inforeg_handler(uint64_t regVec[17]){
     if (screenshot){
         for (int i = 0; i < 17; i++)
@@ -54,7 +58,15 @@ static void sys_printColor_handler(const char *buffer, Color color){
     ngc_printColor(buffer, color);
 }
 
-static void (* syscalls[30])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler, sys_printColor_handler};
+// 2 por altura y ancho
+static uint64_t * sys_screenData_handler(){
+    uint64_t data[2] = {{0};}
+    data[0] = getWidth();
+    data[1] = getHeight();
+    return data;
+}
+
+static void (* syscalls[30])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_clear_screen_handler, sys_inforeg_handler, sys_font_handler, sys_printColor_handler, sys_screenData_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por eax
 void syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax){

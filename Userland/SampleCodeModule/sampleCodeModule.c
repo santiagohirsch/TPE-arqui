@@ -32,16 +32,19 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 
-/*static void getchar();
+static void clearScreen(int argc, char params[][LENGTH_PARAMETERS]);
 
-static void printchar(char c);
-
-static void scanf();
-
-static void printf(char * str);
-*/
-
-static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron/*, printf, scanf, getchar, putchar*/};
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {
+	help, 
+	screenshot, 
+	invalidOPCode, 
+	divideByZero, 
+	inforeg, 
+	printMem, 
+	time, 
+	changeFontSize, 
+	tron, 
+	clearScreen};
 
 static int findIdxCommand(char *buff);
 
@@ -265,7 +268,13 @@ static void tron(int argc, char params[][LENGTH_PARAMETERS]){
 		printf("Try tron without parameters\n");
 		return;
 	}
-	printf("tron\n");
+	play_tron();
+}
+
+
+static void clearScreen(int argc, char params[][LENGTH_PARAMETERS]) {
+	do_clearScreen();
+	return;
 }
 
 static int findIdxCommand(char *buff){

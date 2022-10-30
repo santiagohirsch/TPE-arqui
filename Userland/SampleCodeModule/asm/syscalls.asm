@@ -4,6 +4,7 @@ GLOBAL sys_time
 GLOBAL sys_inforeg
 GLOBAL sys_changeFontSize
 GLOBAL sys_printColor
+GLOBAL sys_clear_screen
 
 section .text
 sys_read:
@@ -22,11 +23,22 @@ sys_inforeg:
     mov rax, 0x03
     int 80h
     ret
+
 sys_changeFontSize:
     mov rax, 0x04
     int 80h
     ret
+
 sys_printColor:
     mov rax, 0x05
+    int 80h
+    ret
+
+sys_clear_screen:
+    mov rax, 0x06
+    int 80h
+    ret
+sys_getSreenData:
+    mov rax, 0x07
     int 80h
     ret

@@ -49,7 +49,6 @@ struct vbe_mode_info_structure* screenData = (void*)0x5C00;
 // base
 static int level = 1; //que empiece en 1
 //    STATIC METHODS DECLARATION
-
 static void* getPtrToPixel(uint16_t x, uint16_t y) {
     return (void*)(screenData->framebuffer + 3 * (x + (y * (uint64_t)screenData->width)));
 }
@@ -60,8 +59,17 @@ uint16_t penX = 0, penY = 0;
 uint16_t lastPenX = 0;
 Color penColor = {0x7F, 0x7F, 0x7F};
 
+
+
 // ==============================================================================
-// PUBLIC NGC_PRINT METHODS
+// PUBLIC GETTERS && NGC_PRINT METHODS 
+uint64_t getHeight(){
+    return screenData->height;
+}
+
+uint64_t getWidth(){
+    return screenData->width;
+}
 
 static void ngc_setColor(Color newColor){
     penColor = newColor;
@@ -199,6 +207,34 @@ void ngc_printNewline(void) {
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT*level); 
     }
 }
+
+void ngc_print_pixels(uint16_t fromX, uint16_t fromY, uint64_t width, uint64_t height, Color color) {
+    
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            ngc_print_pixel(fromX + i, fromY + j, color);
+        }
+    }
+}
+
+void ngc_print_pixel(uint16_t x, uint16_t y, Color color) {
+    
+    Color* pos = (Color*) getPtrToPixel(x, y);
+    *pos = color;
+}
+
+void ngc_paint_screen(Color bg_color) {
+
+    uint8_t* pos = (uint8_t*)((uint64_t)screenData->framebuffer);
+    for (uint32_t len = (uint32_t)screenData->width * screenData->height; len; len-=3, pos+=3) {
+        pos[0] = bg_color.b;
+        pos[1] = bg_color.g;
+        pos[2] = bg_color.r;
+    }
+    
+    penX = 0; penY = 0;
+}
+
 // ==============================================================================
 
 static void delete_last_char() {
