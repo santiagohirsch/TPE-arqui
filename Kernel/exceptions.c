@@ -18,8 +18,8 @@ static const char* errNames[7] = {"Divide by Zero\n", "","","","","","Invalid Op
 
 static const Color red = {0x00, 0x00, 0xFF};
 //Transforma un int a un hexadecimal de 16 char (para que queden todos los registros de la misma longitud)
-static void intToHex(uint64_t num, char buffer[16]){
-	int i = 15;
+static void intToHex(uint64_t num, char buffer[17]){
+	int i = 16;
 	while (i-- != 0){
 		int digit = num % 16;
         buffer[i] = (digit < 10 ? '0' : ('A' - 10)) + digit;

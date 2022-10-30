@@ -97,9 +97,9 @@ SECTION .text
 	mov [regdata + (5*8)], rsi
 	mov [regdata + (6*8)], rdi
 	mov [regdata + (7*8)], rbp
-	mov rax, rsp ; We get the value of RSP when the exception ocurred by adding the amount of pushed bytes to the current value of RSP.
-	add rax, 0x28
-	mov [regdata + (8*8)], rax
+	;mov rax, rsp ; We get the value of RSP when the exception ocurred by adding the amount of pushed bytes to the current value of RSP.
+	;add rax, 0x28
+	mov [regdata + (8*8)], rsp
 	mov [regdata + (9*8)], r8
 	mov [regdata + (10*8)], r9
 	mov [regdata + (11*8)], r10
