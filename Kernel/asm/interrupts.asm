@@ -87,7 +87,6 @@ SECTION .text
 	;me guardo los registros para imprimir
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
 
-	;marengo stealed shit
 	mov [regdata + (1*8)], rax
 	mov rax, $;[rsp] ;rip = int return address
 	mov [regdata], rax 
@@ -97,9 +96,9 @@ SECTION .text
 	mov [regdata + (5*8)], rsi
 	mov [regdata + (6*8)], rdi
 	mov [regdata + (7*8)], rbp
-	;mov rax, rsp ; We get the value of RSP when the exception ocurred by adding the amount of pushed bytes to the current value of RSP.
-	;add rax, 0x28
-	mov [regdata + (8*8)], rsp
+	mov rax, rsp ; We get the value of RSP 
+	add rax, 0x28 ; We add bytes in order to compensate for the values pushed since the exception occurred and called the exception handler
+	mov [regdata + (8*8)], rax;rsp
 	mov [regdata + (9*8)], r8
 	mov [regdata + (10*8)], r9
 	mov [regdata + (11*8)], r10

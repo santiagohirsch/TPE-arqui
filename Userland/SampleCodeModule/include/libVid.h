@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-
 void printf(const char *format, ...);
 
 void scanf(char* format, ...);

@@ -50,7 +50,11 @@ static void sys_font_handler(uint64_t level){
     changeFontSize(level);
 }
 
-static void (* syscalls[30])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler};
+static void sys_printColor_handler(const char *buffer, Color color){
+    ngc_printColor(buffer, color);
+}
+
+static void (* syscalls[30])(uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler, sys_printColor_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por eax
 void syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax){

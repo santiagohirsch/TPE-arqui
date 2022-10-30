@@ -1,6 +1,7 @@
 #include <libVid.h>
 #include <stdint.h>
 #include <stringUtil.h>
+#include <colors.h>
 
 #define MAX_PARAMETERS 5
 #define LENGTH_PARAMETERS 256
@@ -31,7 +32,16 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void tron(int argc, char params[][LENGTH_PARAMETERS]);
 
-static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
+/*static void getchar();
+
+static void printchar(char c);
+
+static void scanf();
+
+static void printf(char * str);
+*/
+
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {help, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron/*, printf, scanf, getchar, putchar*/};
 
 static int findIdxCommand(char *buff);
 
@@ -44,11 +54,6 @@ main() {
 	printf("WELCOME! Type \"HELP\" for list\n");
 	while(1){
 		printf("$>");
-		// buffer para ver q comando me manda
-		/*int a;
-		char * string = {0};
-		scanf("%d %s", &a,string);
-		printf("int : %dendD string: %sendS", a,string);*/
 		char buff_command[BUFFER_LENGTH] = {0};
 		// command
 		char command[COMMANDS_LENGTH] = {0};
@@ -203,7 +208,10 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		char  buffer[6] = "0x00 ";
 		buffer[2] = byteHexToChar(mem[i] >> 4);	// first hex value
 		buffer[3] = byteHexToChar(mem[i] & 0x0F);	
-		printf(buffer);
+		Color cyan = {0xFF, 0xFF, 0x00};
+		Color yellow = {0x00, 0xFF, 0xFF};
+		printColor("0x", cyan);
+		printColor(buffer + 2, yellow);
 	}
 	printf("\n");
 }

@@ -7,6 +7,10 @@
 #define MAX_INT 18
 #define MAX_BUFFER 255
 
+void printColor(const char * buffer, Color color){
+	sys_printColor(buffer, color);
+}
+
 void do_changeFontSize(uint64_t level){
 	sys_changeFontSize(level);
 }

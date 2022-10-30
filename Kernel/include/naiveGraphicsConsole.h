@@ -20,9 +20,7 @@ void ngc_printChar(char c);
 
 void ngc_print(char * s);
 
-void ngc_setColor(Color newColor);
-
-void ngc_printColor(char * string, Color color);
+void ngc_printColor(const char * buffer, Color color);
 
 void changeFontSize(uint64_t newlevel);
 
