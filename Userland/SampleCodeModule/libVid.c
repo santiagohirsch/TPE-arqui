@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stringUtil.h>
 #include <stdarg.h>
+#include <colors.h>
 
 #define MAX_INT 18
 
@@ -27,9 +28,11 @@ void getTime(char * buffer){
 
 }
 
-void do_clearScreen() {
-	sys_clear_screen();
+void do_clearScreen(Color color) {
+	sys_clear_screen(color);	
 }
+
+
 
 /*
 uint64_t getScreenshot(){
