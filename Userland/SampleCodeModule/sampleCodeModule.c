@@ -239,7 +239,7 @@ static void tron(int argc, char params[][LENGTH_PARAMETERS]){
 		printf("Try tron without parameters\n");
 		return;
 	}
-	printf("tron\n");
+	play_tron();
 }
 
 
