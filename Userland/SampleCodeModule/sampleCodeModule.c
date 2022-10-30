@@ -201,7 +201,7 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 			printf("\n");
 		}
 		char  buffer[6] = "0x00 ";
-		buffer[2] = byteHexToChar((mem[i] & 0xF0 ) >> 4);	// first hex value
+		buffer[2] = byteHexToChar(mem[i] >> 4);	// first hex value
 		buffer[3] = byteHexToChar(mem[i] & 0x0F);	
 		printf(buffer);
 	}
