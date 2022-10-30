@@ -63,13 +63,14 @@ int getChar(){
 
 //en  fmt nos pasa formato ... nos van a mandar las variables a dnd asignar
 void scanf(char * format,...){
-	char * str = {0};
+	char str[MAX_BUFFER] = {0};
 	int len = 0;
 	//lectura del buffer
 	char buffer[MAX_BUFFER];
 	sys_read(KDBIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
 	//parseamos para poder asignarselo a cada param
 	//primer caracter si o si %
+	printf("buffer: %s\n",buffer);
 	if(*format != '%'){
 		printf("uso incorrecto de scanf\n");
 		return;
@@ -106,9 +107,10 @@ void scanf(char * format,...){
             	case 's':
 				case 'S':
 					while(buffer[buffIdx]!= '\0'){
-						str[len++]= buffer[buffIdx++];
+						str[len++]= buffer[++buffIdx];
 					}
 					str[len] = buffer[buffIdx];
+					printf("str: %s\n",str);
 					*(char *)va_arg( vl, char* ) = str;
                 	//putString(va_arg(p_arg, char *));
                 	break;

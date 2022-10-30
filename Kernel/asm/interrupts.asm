@@ -26,6 +26,7 @@ EXTERN keyboard_handler
 GLOBAL info
 GLOBAL screenshot
 
+
 SECTION .text
 
 %macro pushState 0
@@ -85,31 +86,34 @@ SECTION .text
 	
 	;me guardo los registros para imprimir
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
-	mov [regdata], rax
-	mov [regdata+8], rbx
-	mov [regdata+16], rcx
-	mov [regdata+24], rdx
-	mov [regdata+32], rsi
-	mov [regdata+40], rdi
-	mov [regdata+48], rbp
-	mov [regdata+64], r8
-	mov [regdata+72], r9
-	mov [regdata+80], r10
-	mov [regdata+88], r11
-	mov [regdata+96], r12
-	mov [regdata+104], r13
-	mov [regdata+112], r14
-	mov [regdata+120], r15
 
-	
 	;marengo stealed shit
+	mov [regdata + (1*8)], rax
+	mov rax, $;[rsp] ;rip = int return address
+	mov [regdata], rax 
+	mov [regdata + (2*8)], rbx
+	mov [regdata + (3*8)], rcx
+	mov [regdata + (4*8)], rdx
+	mov [regdata + (5*8)], rsi
+	mov [regdata + (6*8)], rdi
+	mov [regdata + (7*8)], rbp
 	mov rax, rsp ; We get the value of RSP when the exception ocurred by adding the amount of pushed bytes to the current value of RSP.
 	add rax, 0x28
-	mov [regdata+(8*8)], rax
-	mov rax, [rsp] ; We get the value of RIP when the exception ocurred by taking the interruption's return address.
-	mov [regdata+128], rax
-	mov rax, [rsp+8] ; We get the value of RFLAGS the same way (it is pushed when an interrupt occurs).
-	mov [regdata+136], rax
+	mov [regdata + (8*8)], rax
+	mov [regdata + (9*8)], r8
+	mov [regdata + (10*8)], r9
+	mov [regdata + (11*8)], r10
+	mov [regdata + (12*8)], r11
+	mov [regdata + (13*8)], r12
+	mov [regdata + (14*8)], r13
+	mov [regdata + (15*8)], r14
+	mov [regdata + (16*8)], r15
+	mov rax, [rsp+8] ; We get the value of RFLAGS (it is pushed when an interrupt occurs).
+	mov [regdata + (17*8)], rax
+
+	
+	
+	
 
 	mov rdi, %1 ; pasaje de parametro
 	mov rsi, regdata
@@ -240,4 +244,5 @@ haltcpu:
 SECTION .bss
 	aux resq 1
 	info resq 17
+	regdata resq 18
 	screenshot resb 1 ;reservo un bit para poner en 1 si hubo un screenshot

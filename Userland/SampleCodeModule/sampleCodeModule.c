@@ -19,6 +19,8 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]);
 
 static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]);
 
+static void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]);
+
 static void inforeg(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void printMem(int argc, char params[][LENGTH_PARAMETERS]);
@@ -43,7 +45,10 @@ main() {
 	while(1){
 		printf("$>");
 		// buffer para ver q comando me manda
+		/*int a;
 		char * string = {0};
+		scanf("%d %s", &a,string);
+		printf("int : %dendD string: %sendS", a,string);*/
 		char buff_command[BUFFER_LENGTH] = {0};
 		// command
 		char command[COMMANDS_LENGTH] = {0};
@@ -171,7 +176,6 @@ static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 }
 
 static char byteHexToChar(uint8_t value) {
-	printf("%d ",value);
 	return value >= 10 ? (value - 10 + 'A') : (value + '0');
 }
 
@@ -213,13 +217,14 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 	}
 	if (params[0][0] == '1' || params[0][0] == '2' || params[0][0] == '3' ){
 		if(params[0][0] == '3'){
-			//everythingOk = 0;
+			everythingOk = 0;
 			printf("Warning, font size 3 is way too big!\n");
-			printf("Type 'yes' if you still want to change the font: ");
-			char*ans;
-			scanf("%s",ans);
+			printf("Type 'y' if you still want to change the font: ");
+			char ans;
+			scanf("%c",ans);
 			printf(ans);
-			if(_strcmp(ans, "yes") == 0) everythingOk = 1;
+			if(ans == 'y') 
+				everythingOk = 1;
 		}
 		if (everythingOk) do_changeFontSize(params[0][0]-'0');
 		

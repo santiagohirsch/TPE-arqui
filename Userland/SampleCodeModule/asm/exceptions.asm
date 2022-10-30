@@ -7,7 +7,6 @@ exc_invalidOpCode:
     ret
 
 exc_divisionByZero:
-    mov rax, 10
-    mov rbx, 0
-    div rbx     ; -> DivideByZero Exception
+    mov rax, 0
+    div rax     ; -> DivideByZero Exception
     ret
