@@ -33,23 +33,23 @@ static uint64_t sys_time_handler(){
     return (_NRTCGetHours()) | ((uint64_t)_NRTCGetMins() << 8) | ((uint64_t)_NRTCGetSeconds() << 16);
 }
 
-static void sys_clear_screen_handler() {
-    Color black = {0, 0, 0};
-    Color gray = {0x7f,0x7f,0x7f};
-    Color white = {0xFF, 0xFF, 0xFF};
-    Color red = {0, 0, 0xFF};
-
-    ngc_paint_screen(black);
-    ngc_print_pixels(150, 200, 80, 50, white);
-    ngc_print_pixels(200, 200, 80, 50, red);
-    ngc_print_pixels(250, 200, 80, 50, white);
+static void sys_clear_screen_handler(Color color) {
+    ngc_paint_screen(color);
 }
 
 static uint64_t sys_screenshot_handler(){
     //return info;
 }
 
-static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_clear_screen_handler, sys_screenshot_handler};
+// 2 por altura y ancho
+static uint64_t * sys_screenData_handler(){
+    uint64_t data[2] = {{0};}
+    data[0] = getWidth();
+    data[1] = getHeight();
+    return data;
+}
+
+static void (* syscalls[30])(void * rsi, void * rdx, void * rcx, void * r8, void * rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_clear_screen_handler, sys_screenshot_handler, sys_screenData_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por eax
 void syscallDispatcher(void * rdi, void * rsi, void * rdx, void * rcx, void * r8, uint64_t rax){
