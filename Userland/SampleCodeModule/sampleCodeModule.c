@@ -215,8 +215,12 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 		printf("Try change font size with 1 parameter (setting)\n");
 		return;
 	}
+	if (_strlen(params[0]) > 1){
+		printf("Try with 1, 2 or 3\n");
+		return;
+	}
 	if (params[0][0] == '1' || params[0][0] == '2' || params[0][0] == '3' ){
-		if(params[0][0] == '3'){
+		if (params[0][0] == '3'){
 			everythingOk = 0;
 			printf("Warning, font size 3 is way too big!\n");
 			printf("Type 'y' if you still want to change the font: ");

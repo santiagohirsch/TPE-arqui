@@ -176,8 +176,8 @@ void ngc_printNewline(void) {
     penX = 0; // pen x is set to full left.
 
     // If there is space for another line, we simply advance the pen y. Otherwise, we move up the entire screen and clear the lower part.
-    if (penY + (level*CHAR_HEIGHT) <= screenData->height) {
-        penY += level*CHAR_HEIGHT;
+    if (penY + (level*CHAR_HEIGHT) <= (screenData->height - (CHAR_HEIGHT*3))) { //CHAR_HEIGHT*3 es para dejar lugar para la font mas grande (level = 3)
+        penY += level*(CHAR_HEIGHT); // con un -3 se agarra un poco mas arriba y lo hace mas legible pero tan chantas no somos
     } else {
         //AGREGANDO X2 PARA EL NUEVO TAM
         // dst: posicion de inicio de la pantalla
@@ -189,14 +189,14 @@ void ngc_printNewline(void) {
         
         // len: cantidad de pixeles en toda la pantalla menos la ultima linea
         // 3 por rgb, width es el ancho, height - CHAR_HEIGHT es todas las lineas excepto la ultima
-        uint64_t len = 3 * ((uint64_t)screenData->width * (screenData->height*level - CHAR_HEIGHT*level)); //height*2 char_height*2 para el aumento del size
+        uint64_t len = 3 * ((uint64_t)screenData->width * ((screenData->height)*level - (CHAR_HEIGHT*level))); //height*2 char_height*2 para el aumento del size
         
         /*
             este bloque copia todo lo escrito en pantalla a una linea mas arriba
             y deja la posicion para escribir en la ultima linea
         */
         memcpy(dst, src, len);
-        memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT*level); //char_height*2 para el aumento del size
+        memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT*level); 
     }
 }
 // ==============================================================================
