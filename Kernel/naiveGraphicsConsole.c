@@ -45,7 +45,6 @@ struct vbe_mode_info_structure* screenData = (void*)0x5C00;
 
 
 //    STATIC METHODS DECLARATION
-//
 static void* getPtrToPixel(uint16_t x, uint16_t y) {
     return (void*)(screenData->framebuffer + 3 * (x + (y * (uint64_t)screenData->width)));
 }
@@ -56,8 +55,17 @@ uint16_t penX = 0, penY = 0;
 uint16_t lastPenX = 0;
 Color penColor = {0x7F, 0x7F, 0x7F};
 
+
+
 // ==============================================================================
-// PUBLIC NGC_PRINT METHODS
+// PUBLIC GETTERS && NGC_PRINT METHODS 
+uint64_t getHeight(){
+    return screenData->height;
+}
+
+uint64_t getWidth(){
+    return screenData->width;
+}
 
 void ngc_printChar(char c) {
     if (c == '\n') {
