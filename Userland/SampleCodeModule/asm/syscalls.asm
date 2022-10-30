@@ -21,7 +21,10 @@ sys_clear_screen:
     mov rax, 0x03
     int 80h
     ret
-
+sys_getSreenData:
+    mov rax, 0x04
+    int 80h
+    ret
 ;sys_screenshot:
 ;    mov rax, 0x04
 ;    int 80h
