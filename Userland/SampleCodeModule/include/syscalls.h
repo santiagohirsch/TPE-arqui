@@ -26,4 +26,6 @@ void sys_paint_rect(uint16_t fromX, uint16_t fromY, uint16_t width, uint16_t hei
 
 uint64_t sys_getTicks();
  
+void sys_clear_screen(Color color);
+
 #endif
