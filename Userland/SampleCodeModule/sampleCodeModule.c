@@ -10,11 +10,13 @@
 #define COMMANDS_LENGTH 9
 #define REGISTERS 17
 
-static const char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
+//le sacamos const por el momento por el warning
+static char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
-static const char* registerNames[REGISTERS] = {
+/*static  char* registerNames[REGISTERS] = {
     "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
-};
+};*/
+
 
 /* COMMANDS */
 static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]);
@@ -54,25 +56,28 @@ int
 main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
+	
 	printf("WELCOME! Type \"HELP\" for list\n");
 	while(1){
-		printf("$>");
-		char buff_command[BUFFER_LENGTH] = {0};
-		// command
-		char command[COMMANDS_LENGTH] = {0};
-		// parametros enviados junto al comando
-		char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
-		scan(buff_command, BUFFER_LENGTH); //sys_read de todo
-		int size = parseBuffer(command, parameters, buff_command);
+			printf("$>");
+			char buff_command[BUFFER_LENGTH] = {0};
+			// command
+			char command[COMMANDS_LENGTH] = {0};
+			// parametros enviados junto al comando
+			char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
 
-		int idx = findIdxCommand(command);
+			scan(buff_command, BUFFER_LENGTH); //sys_read de todo
+			
+			int size = parseBuffer(command, parameters, buff_command);
 
-		if(idx >= 0 ){
-			commands_functions[idx](size,parameters);
-		}
-		else if (idx == -1){
-			printf("Command not found: try again\n");
-		}
+			int idx = findIdxCommand(command);
+
+			if(idx >= 0 ){
+				commands_functions[idx](size,parameters);
+			}
+			else if (idx == -1){
+				printf("Command not found: try again\n");
+			}
 	}
 	return 0;
 }
@@ -101,7 +106,7 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 	k=1;
 	for(j=0; i<BUFFER_LENGTH;) {
 		if(k>=MAX_PARAMETERS || j>=LENGTH_PARAMETERS)
-			return;
+			return -1;
 		//casos: a: estoy en un espacio => aumento k pues termino un param
 		//		 b: estoy en una caracter => o es el ultimo o no
 		// => si es el ultimo ++k y si no sigo leyendo
@@ -163,15 +168,6 @@ static void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 }
 
 
-static void intToHex(uint64_t num, char buffer[16]){
-	int i = 15;
-	while (i-- != 0){
-		int digit = num % 16;
-        buffer[i] = (digit < 10 ? '0' : ('A' - 10)) + digit;
-        num /= 16;
-	}
-}
-
 //no params
 static void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
@@ -200,8 +196,8 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	}
 
 	// we store in mem the pointer to the first memory we want to print
-	uint8_t * mem;
-	mem = hexStrToInt(params[0]);
+	uint8_t * mem =0;
+	*mem = hexStrToInt(params[0]);
 	// we print the 32 bytes that follow *mem
 	for (int i = 0; i < 32; i++){
 		if (i == 16) {
