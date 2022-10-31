@@ -2,14 +2,15 @@
 #include <stdint.h>
 #include <stringUtil.h>
 #include <colors.h>
+#include <tron.h>
 
 #define MAX_PARAMETERS 5
 #define LENGTH_PARAMETERS 256
 #define BUFFER_LENGTH 256
-#define COMMANDS_LENGTH 12
+#define COMMANDS_LENGTH 9
 #define REGISTERS 17
 
-static const char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
+static const char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
 static const char* registerNames[REGISTERS] = {
     "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
@@ -36,7 +37,6 @@ static void clearScreen(int argc, char params[][LENGTH_PARAMETERS]);
 
 static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {
 	help, 
-	screenshot, 
 	invalidOPCode, 
 	divideByZero, 
 	inforeg, 
@@ -63,7 +63,6 @@ main() {
 		// parametros enviados junto al comando
 		char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
 		scan(buff_command, BUFFER_LENGTH); //sys_read de todo
-
 		int size = parseBuffer(command, parameters, buff_command);
 
 		int idx = findIdxCommand(command);
@@ -273,7 +272,8 @@ static void tron(int argc, char params[][LENGTH_PARAMETERS]){
 
 
 static void clearScreen(int argc, char params[][LENGTH_PARAMETERS]) {
-	do_clearScreen();
+	Color color = {0x00, 0x00, 0x00};
+	do_clearScreen(color);
 	return;
 }
 
