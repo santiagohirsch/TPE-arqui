@@ -20,12 +20,16 @@ void ngc_printChar(char c);
 
 void ngc_print(char * s);
 
+uint64_t ngc_getHeight(); 
+
+uint64_t ngc_getWidth(); 
+
 void ngc_printColor(const char * buffer, Color color);
 
 void changeFontSize(uint64_t newlevel);
 
 void ngc_paint_screen(Color bg_color);
 
-void ngc_print_pixels(uint16_t fromX, uint16_t fromY, uint64_t width, uint64_t height, Color color);
+void ngc_print_pixels(uint64_t fromX, uint64_t fromY, uint64_t width, uint64_t height, Color color);
 
 #endif
