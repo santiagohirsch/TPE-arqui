@@ -7,6 +7,7 @@ extern uint64_t tKey();
 
 void keyboard_handler(uint64_t teclahex);
 char getLastChar();
+char getFirstChar();
 char * getBuffer();
 uint64_t getBufferLength();
 
