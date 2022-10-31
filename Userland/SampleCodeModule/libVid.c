@@ -4,7 +4,7 @@
 #include <stringUtil.h>
 #include <stdarg.h>
 #include <colors.h>
-
+#include <exceptions.h>
 #define MAX_INT 18
 #define MAX_BUFFER 255
 
@@ -21,8 +21,32 @@ void putString(const char *buffer){
     sys_write(STDOUT, buffer, _strlen(buffer));
 }
 
+
 void scan(char * buffer, uint64_t length){
-	sys_read(KDBIN, buffer, length);
+	int foundEnter = 0;
+	if (length == 0){
+		return;
+	}
+	char c;
+	int i = 0;
+	while(!foundEnter){
+		c = getChar();
+		// si se ingresa un enter se termina el string y salimos del loop
+		if (c == '\n'){
+			buffer[i] = '\0';
+			putChar(c);
+			foundEnter = 1;	
+		}
+		// agregamos el char ingresado al buffer
+		else {
+			putChar(c);
+			// validacion del maximo de scan
+			if (i < length-1){
+				buffer[i] = c;
+			}    
+            i++;
+		}
+	}
 }
 
 void getTime(char * buffer){
@@ -60,16 +84,14 @@ char * getRestOfString(char string[]){
 	return string;
 }
 
-int getChar(){
+char getChar(){
 	char out;
 	sys_read(KDBIN, &out, 1);
 	return out;
 }
 
-//en  fmt nos pasa formato ... nos van a mandar las variables a dnd asignar
+//en fmt nos pasa formato ... nos van a mandar las variables a dnd asignar
 void scanf(char * format,...){
-	char * str = {0};
-	int len = 0;
 	//lectura del buffer
 	char buffer[MAX_BUFFER];
 	sys_read(KDBIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
