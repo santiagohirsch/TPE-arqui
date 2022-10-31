@@ -8,6 +8,7 @@ GLOBAL sys_clear_screen
 GLOBAL sys_getScreenData
 GLOBAL sys_paint_rect
 GLOBAL sys_getTicks
+GLOBAL sys_timed_read
 
 section .text
 sys_read:
@@ -58,5 +59,10 @@ sys_paint_rect:
 
 sys_getTicks:
     mov rax, 0x09
+    int 80h
+    ret
+
+sys_timed_read:
+    mov rax, 0x0A
     int 80h
     ret
