@@ -194,9 +194,11 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	}
 
 	// we store in mem the pointer to the first memory we want to print
-	uint8_t * mem =0;
-	*mem = hexStrToInt(params[0]);
-	printf("%c\n",mem);
+	uint8_t * mem;
+	if(!hexStrToInt(params[0],&mem)){
+		printf("Parameter is not a valid memory address. Try a smaller number\n");
+		return;
+	}
 	// we print the 32 bytes that follow *mem
 	for (int i = 0; i < 32; i++){
 		if (i == 16) {
@@ -205,10 +207,10 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		char  buffer[6] = "0x00 ";
 		buffer[2] = byteHexToChar(mem[i] >> 4);	// first hex value
 		buffer[3] = byteHexToChar(mem[i] & 0x0F);	
-		Color cyan = {0xFF, 0xFF, 0x00};
-		Color yellow = {0x00, 0xFF, 0xFF};
-		printColor("0x", cyan);
-		printColor(buffer + 2, yellow);
+		Color cyan = {0xEE, 0xEE, 0x00};
+		Color darkerCyan = { 0xAA,0xAA,0x00};
+		printColor("0x", darkerCyan);
+		printColor(buffer+2, cyan);
 	}
 	printf("\n");
 }
