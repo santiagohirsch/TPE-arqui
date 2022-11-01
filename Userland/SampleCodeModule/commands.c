@@ -2,9 +2,14 @@
 #include <commands.h>
 #include <colors.h>
 #include <inout.h>
+#include <stringUtil.h>
+#include <tron.h>
+
 #define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
 
-Color warningColor = {0x00, 0x10, 0xFF};
+const Color warningColor = {0x00, 0x10, 0xFF};
+const Color cyan = {0xEE, 0xEE, 0x00};
+const Color darkerCyan = { 0xAA,0xAA,0x00};
 
 
 
@@ -66,19 +71,19 @@ char byteHexToChar(uint8_t value) {
 	return value >= 10 ? (value - 10 + 'A') : (value + '0');
 }
  
-static int checkMem(char mem[]){
-    uint64_t len = _strlen(mem);
+static uint64_t checkMem(char mem[], uint64_t * len){
+    *len = _strlen(mem);
     //0x........ -> if it matches ^0x[a-fA-F0-9]{16}
-    if (len < 2 || len > 18 || mem[0] != '0' || mem[1] != 'x'){
+    if (*len < 2 || mem[0] != '0' || mem[1] != 'x'){
         return 0;
     }
 
-    for (int i = 2; i < len; i++){
+    for (int i = 2; i < *len; i++){
         if (!isHexa(mem[i])){
             return 0;
         }
     }
-    return 1;
+	return 1;
 }
 
 //1 param: memDirec
@@ -89,9 +94,19 @@ void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		return;
 	}
 
-	if (!checkMem(params[0])){
-		printf("Parameter is not a valid memory address. It must be a hex number started with 0x\n");
+	uint64_t len;
+
+	if (!checkMem(params[0], &len)){
+		printf("Remember that memory addresses go with a ");
+		do_printColor("0x ", cyan);
+		printf("in front.\n");
 		return;
+	}
+
+	if (len == 2) {
+		printf("We'll check for memory: ");
+		do_printColor("0x", darkerCyan);
+		do_printColor("00\n", cyan);
 	}
 
 	// we store in mem the pointer to the first memory we want to print
@@ -108,8 +123,6 @@ void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		char  buffer[6] = "0x00 ";
 		buffer[2] = byteHexToChar(mem[i] >> 4);	// first hex value
 		buffer[3] = byteHexToChar(mem[i] & 0x0F);	
-		Color cyan = {0xEE, 0xEE, 0x00};
-		Color darkerCyan = { 0xAA,0xAA,0x00};
 		do_printColor("0x", darkerCyan);
 		do_printColor(buffer+2, cyan);
 	}
