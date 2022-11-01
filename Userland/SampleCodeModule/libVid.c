@@ -30,26 +30,29 @@ void scan(char * buffer, uint64_t length){
 	char c;
 	int i = 0;
 	while(!foundEnter){
+		
 		c = getChar();
 		//if (c != 0xFF){
-		// si se ingresa un enter se termina el string y salimos del loop
-		if (c == '\n'){
-			buffer[i] = '\0';
-			putChar(c);
-			foundEnter = 1; 
-		}
-		// agregamos el char ingresado al buffer
-		else if(c >= 0){
-			putChar(c);
-			if (c == 0x7F && i > 0){
-				i--;
+			// si se ingresa un enter se termina el string y salimos del loop
+			if (c == '\n'){
+				buffer[i] = '\0';
+				putChar(c);
+				foundEnter = 1; 
 			}
-			// validacion del maximo de scan
-			else if (i < length-1){
-				buffer[i] = c;
-				i++;
-			}    
-		}
+			// agregamos el char ingresado al buffer
+			else if(c >= 0){
+				putChar(c);
+				if (c == 0x7F && i >= 0){
+					if (i > 0){
+						i--;
+					}
+				}
+				// validacion del maximo de scan
+				else if (i < length-1){
+					buffer[i] = c;
+					i++;
+				}    
+			}
 		//}
 	}
 }
