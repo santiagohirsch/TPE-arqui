@@ -40,7 +40,7 @@ void keyboard_handler(uint64_t teclahex){
 
 char getFirstChar(){
     if (qElements == 0) { 
-        return 0xFF; // buffer is empty
+        return -1; // buffer is empty
     }
 
     char toReturn = buffer[readIndex];

@@ -39,13 +39,14 @@ void scan(char * buffer, uint64_t length){
 				foundEnter = 1;	
 			}
 			// agregamos el char ingresado al buffer
-			else {
+			else if(c>=0){
 				putChar(c);
 				// validacion del maximo de scan
 				if (i < length-1){
 					buffer[i] = c;
+					i++;
 				}    
-				i++;
+				
 			}
 		//}
 	}
