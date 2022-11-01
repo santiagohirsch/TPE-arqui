@@ -2,7 +2,7 @@
 #include <colors.h>
 #include <libvid.h>
 #include <syscalls.h>
-#include <sys/io.h>
+#include <tron.h>
 #define SIZE 8
 
 typedef struct {
@@ -42,11 +42,11 @@ enum DIRECTIONS {
 }Dirs;
 
 
-void getScreenData(uint64_t * data){ 
+static void getScreenData(uint16_t * data){ 
     return sys_getScreenData(data);
 }
 
-void do_paintRect(uint64_t fromX, uint64_t fromY, uint64_t width, uint64_t height, Color color){
+static void do_paintRect(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, Color color){
     return sys_paint_rect(fromX, fromY, height, width, color);
 }
 
@@ -118,14 +118,14 @@ static void updatePosition(uint64_t keypressed){
 void play_tron(){
 //recordar d bloquear el resto tel teclado
     //seteamos pantalla -> players -> lectura para teclado (wasd player1 y flechas player2) -> 
-    uint64_t screen[2] = {0}; //syscall que nos da los datos de la pantalla . por el momento 0 = width y 1 = height
+    uint16_t screen[2] = {0}; //syscall que nos da los datos de la pantalla . por el momento 0 = width y 1 = height
     getScreenData(screen);
     setScreen(screen[0], screen[1]);
     setPlayers(screen[0],screen[1]);
     
-    const int8_t width = (screen[0]-16)/8;
-    const uint8_t height = (screen[1]-16)/8;
-    uint8_t board[width][height]; //me pa q 
+    const uint16_t width = (screen[0]-16)/8;
+    const uint16_t height = (screen[1]-16)/8;
+    uint16_t board[width][height]; //me pa q 
     for(int i = 0; i < width;i++) for(int j = 0; j< height; j++)  board[i][j]=0; 
     //uint8_t alive1 = 1, alive2 = 1;
     uint64_t speed = 1;
@@ -194,7 +194,7 @@ static void paintBorders(uint16_t width, uint16_t height, Color color) {
 }
 
 //hace la ventana en donde se juega al tron
-void setScreen(uint64_t width, uint64_t height){
+void setScreen(uint16_t width, uint16_t height){
     Color bg_color = {0x3B, 0x0A, 0x00}; //azul
     do_clearScreen(bg_color); //pintar pantalla d azul
     paintBorders(width, height, tronColor3);

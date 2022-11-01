@@ -7,6 +7,7 @@
 #include <time.h>
 #include <defs.h>
 #include <naiveGraphicsConsole.h>
+#include <interrupts.h>
 //#include <sys/io.h>
 
 extern uint8_t text;

@@ -95,7 +95,7 @@ void _strcpy(char * dest, char * src, int n){
     *dest = '\0';
 }
 
-uint64_t _strlen(char str[]){
+uint64_t _strlen(const char * str){
 	uint64_t ans = 0;
     while(str[ans] != '\0'){
         ans++;

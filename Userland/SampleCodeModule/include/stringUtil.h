@@ -5,7 +5,7 @@
 
 void _strcpy(char * dest, char * src, int n);
 
-uint64_t _strlen( char  str[]);
+uint64_t _strlen(const char  *str);
 
 int _strcmp(char *str1, char *str2);
 

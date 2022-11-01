@@ -8,6 +8,4 @@ void * memcpy(void * destination, const void * source, uint64_t length);
 
 char *cpuVendor(char *result);
 
-void sys_write(unsigned int fd, char *buf, int count);
-
 #endif

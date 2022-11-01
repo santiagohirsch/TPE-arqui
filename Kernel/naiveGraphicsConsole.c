@@ -2,6 +2,8 @@
 #include <font.h>
 #include <stdint.h>
 #include <string.h>
+#include <lib.h>
+
 struct vbe_mode_info_structure {
     uint16_t attributes;        // deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
     uint8_t window_a;           // deprecated
@@ -64,11 +66,11 @@ Color penColor = {0x7F, 0x7F, 0x7F};
 // ==============================================================================
 // PUBLIC GETTERS && NGC_PRINT METHODS 
 
-uint64_t ngc_getHeight(){
+uint16_t ngc_getHeight(){
     return screenData->height;
 }
 
-uint64_t ngc_getWidth(){
+uint16_t ngc_getWidth(){
     return screenData->width;
 }
 
@@ -174,7 +176,7 @@ void ngc_printChar(char c) {
         ngc_printNewline();
 }
 
-void ngc_print(char * string){
+void ngc_print(const char * string){
     for(int i = 0; string[i]!= '\0';i++){
         ngc_printChar(string[i]);
     }
@@ -214,7 +216,7 @@ void ngc_print_pixel(uint16_t x, uint16_t y, Color color) {
     *pos = color;
 }
 
-void ngc_print_pixels(uint64_t fromX, uint64_t fromY, uint64_t width, uint64_t height, Color color) {
+void ngc_print_pixels(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, Color color) {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             ngc_print_pixel(fromX + i, fromY + j, color);

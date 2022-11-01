@@ -120,11 +120,11 @@ void scanf(char * format,...){
 				return;
 			}
 			else{
-				*format++; //deberia tmbn indicar el inicio d un nuevo param
+				(*format)++; //deberia tmbn indicar el inicio d un nuevo param
 			}
 		}
 		else{
-			*format++;
+			(*format)++;
 			switch (*format) { //caso en el q estoy en una letra 
             	case 'd':
 				case 'D':
@@ -143,7 +143,7 @@ void scanf(char * format,...){
 					return;
 			}
 			
-			*format++;	
+			(*format)++;	
 		}
 	}
 	va_end(vl);

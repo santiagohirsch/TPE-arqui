@@ -20,7 +20,7 @@ void sys_changeFontSize();
 
 void sys_printColor(const char * buffer, Color color);
 
-void sys_getScreenData(uint64_t * screen);
+void sys_getScreenData(uint16_t * screen);
 
 void sys_paint_rect(uint16_t fromX, uint16_t fromY, uint16_t width, uint16_t height, Color color);
 

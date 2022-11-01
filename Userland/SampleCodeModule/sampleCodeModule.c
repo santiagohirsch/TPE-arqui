@@ -140,7 +140,8 @@ static void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	".                    Address received as an argument.\n"
 	"TIME                 Command to display the system day and time.\n"
 	"CHANGEFONTSIZE       Changes font size: insert 1 2 3 for the desired level.\n"
-	"TRON                 Get ready to play Tron!.\n";
+	"TRON                 Get ready to play Tron!.\n"
+	"CLEAR                Clear screen\n";
 	printf(helpstring);
 }
 
@@ -195,6 +196,7 @@ static void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	// we store in mem the pointer to the first memory we want to print
 	uint8_t * mem =0;
 	*mem = hexStrToInt(params[0]);
+	printf("%c\n",mem);
 	// we print the 32 bytes that follow *mem
 	for (int i = 0; i < 32; i++){
 		if (i == 16) {
