@@ -1,5 +1,5 @@
 #include <stringUtil.h>
-#include <libVid.h>
+#include <inout.h>
 #include <stdint.h>
 
 #define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
@@ -59,13 +59,6 @@ uint64_t atoi(char S[])
     return num;
 }
 
-uint64_t getFormat(uint64_t n) {
-	uint64_t dec = n & 240;
-	dec = dec >> 4;
-	uint64_t units = n & 15;
-	return dec * 10 + units;
-}
-
 uint64_t itoa(uint64_t number, char* s) {
     int digits = 1;
 	for (int n=number/10; n != 0; digits++, n /= 10);
@@ -122,3 +115,13 @@ int _strcmp(char *str1, char *str2){
     }
 }
 
+int strtoi(char * buffer, int * i){
+	char strnum[MAX_INT];
+	int numsize=0;
+	while(buffer[*i] != ' ' && buffer[*i] != '\n' && buffer[*i] != '\0'){
+		strnum[numsize++] = buffer[*i];
+		(*i)++;
+	}
+	uint64_t out = atoi(strnum);
+	return out;
+}

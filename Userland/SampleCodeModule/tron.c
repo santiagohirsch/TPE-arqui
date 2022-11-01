@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <colors.h>
-#include <libvid.h>
+#include <inout.h>
 #include <syscalls.h>
 #include <tron.h>
 #define SIZE 8
@@ -132,7 +132,7 @@ void play_tron(){
     uint64_t ticks = sys_getTicks();
     uint64_t lastTicks = 0;
     while(player1.state && player2.state){
-        char c = getChar();
+        char c = do_getChar();
         updatePosition(c);
 
         board[player1.posX][player1.posY]=1;

@@ -1,14 +1,14 @@
 #include <syscalls.h>
-#include <libVid.h>
 #include <stdint.h>
+#include <inout.h>
 #include <stringUtil.h>
 #include <stdarg.h>
 #include <colors.h>
 #include <exceptions.h>
-#define MAX_INT 18
+
 #define MAX_BUFFER 255
 
-void printColor(const char * buffer, Color color){
+void do_printColor(const char * buffer, Color color){
 	sys_printColor(buffer, color);
 }
 
@@ -16,13 +16,12 @@ void do_changeFontSize(uint64_t level){
 	sys_changeFontSize(level);
 }
 
-void putString(const char *buffer){
+static void putString(const char *buffer){
     //lamo al syswrite 1=stdout
     sys_write(STDOUT, buffer, _strlen(buffer));
 }
 
-
-void scan(char * buffer, uint64_t length){
+void bufferAction(char * buffer, uint64_t length){
 	int foundEnter = 0;
 	if (length == 0){
 		return;
@@ -31,17 +30,17 @@ void scan(char * buffer, uint64_t length){
 	int i = 0;
 	while(!foundEnter){
 		
-		c = getChar();
+		c = do_getChar();
 		//if (c != 0xFF){
 			// si se ingresa un enter se termina el string y salimos del loop
 			if (c == '\n'){
 				buffer[i] = '\0';
-				putChar(c);
+				do_putChar(c);
 				foundEnter = 1; 
 			}
 			// agregamos el char ingresado al buffer
 			else if(c >= 0){
-				putChar(c);
+				do_putChar(c);
 				if (c == 0x7F && i >= 0){
 					if (i > 0){
 						i--;
@@ -57,7 +56,15 @@ void scan(char * buffer, uint64_t length){
 	}
 }
 
-void getTime(char * buffer){
+static uint64_t getFormat(uint64_t n) {
+	uint64_t dec = n & 240;
+	dec = dec >> 4;
+	uint64_t units = n & 15;
+	return dec * 10 + units;
+}
+
+
+void do_getTime(char * buffer){
     char* p = buffer;
 	uint64_t time = sys_time();
 	itoa(getFormat(time & 0xFF), p);
@@ -66,7 +73,6 @@ void getTime(char * buffer){
 	p[5] = ':';
 	itoa(getFormat((time >> 16) & 0xFF), &p[6]);
     p[8] = 0;
-
 }
 
 void do_divisionByZero(){
@@ -77,22 +83,11 @@ void do_invalidOpCode(){
 	exc_invalidOpCode();
 }
 
-int strtoi(char * buffer, int * i){
-	char strnum[MAX_INT];
-	int numsize=0;
-	while(buffer[*i] != ' ' && buffer[*i] != '\n' && buffer[*i] != '\0'){
-		strnum[numsize++] = buffer[*i];
-		(*i)++;
-	}
-	uint64_t out = atoi(strnum);
-	return out;
-}
-
 char * getRestOfString(char string[]){
 	return string;
 }
 
-char getChar(){
+char do_getChar(){
 	char out;
 	sys_read(KDBIN, &out, 1);
 	return out;
@@ -149,7 +144,7 @@ void scanf(char * format,...){
 	va_end(vl);
 }
 
-void printInfoReg(){
+void do_printInfoReg(){
 	uint64_t reg[17];
 	uint8_t huboScreenshot = sys_inforeg(reg);
 	if (huboScreenshot){
@@ -182,7 +177,7 @@ void do_clearScreen(Color color) {
 }
 
 
-void putChar(char c) {
+void do_putChar(char c) {
 	sys_write(STDOUT, &c, 1);
 }
 
@@ -225,7 +220,7 @@ void printf (const char *format, ...) {
     while (*format != '\0') {
 		// loop mientras se impriman char normales
         if (*format != '%') {
-            putChar(*format);
+            do_putChar(*format);
             format++;
         } 
 
@@ -241,7 +236,7 @@ void printf (const char *format, ...) {
                 break;
             case 'c':
 			case 'C':
-                putChar(va_arg(p_arg, int));  // char promociona a int
+                do_putChar(va_arg(p_arg, int));  // char promociona a int
                 break;
             case 's':
 			case 'S':
