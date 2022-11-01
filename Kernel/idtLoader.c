@@ -27,7 +27,7 @@ void load_idt() {
   _cli(); //para llamar varias veces al load_idt();
 
     // Exceptions
-    setup_IDT_entry (0x08, (uint64_t)&_divisionByZeroInterruption);
+    setup_IDT_entry (0x00, (uint64_t)&_divisionByZeroInterruption);
 	  setup_IDT_entry (0x06, (uint64_t)&_invalidOpCodeInterruption);
 
     // Hardware Interruptions
