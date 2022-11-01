@@ -2,7 +2,7 @@
 #include <colors.h>
 #include <libvid.h>
 #include <syscalls.h>
-
+#include <sys/io.h>
 #define SIZE 8
 
 typedef struct {
@@ -52,8 +52,8 @@ void do_paintRect(uint64_t fromX, uint64_t fromY, uint64_t width, uint64_t heigh
 
 //ESTAMOS PONIENDO BOARD COMO B[Y][X] 
 //BOARD NO TIENE LOS BORDES EN CUENTA 
-static int isAlive(Player  p, uint16_t width, uint16_t height, uint8_t ** board) {
-    return p.posX < height && p.posX > 0 && p.posY < width && p.posY > 0 && !board[p.posY][p.posX]; //chequeo rango
+static int isAlive(Player  p, uint16_t width, uint16_t height) {
+    return p.posX < width && p.posX > 0 && p.posY < height && p.posY > 0 /*&& board[p.posY][p.posX]==0*/; //chequeo rango
 }
 
 static void updatePosition(uint64_t keypressed){
@@ -61,50 +61,50 @@ static void updatePosition(uint64_t keypressed){
             {
             // caso default no existe ya q tiene q hacer algo siempre
             case 'w':
-                if (player1.direction != 's'){ //opposite 
+                if (player1.direction != 's' /*&& player1.direction != 'w'*/){ //opposite 
                     player1.posY--;
                     player1.direction = 'w';
                 }
                 break;
             case 'a':
-                if(player1.direction != 'd'){
-                    player1.posX++;
+                if(player1.direction != 'd' /*&& player1.direction != 'a'*/){
+                    player1.posX--;
                     player1.direction = 'a';
                 }
                 break;
             case 's':
-                if(player1.direction != 'w'){
+                if(player1.direction != 'w' /*&& player1.direction != 's'*/){
                     player1.posY++;   
                     player1.direction = 's';
                 }
                 break;
             case 'd':
-                if (player1.direction != 'a'){
+                if (player1.direction != 'a' /*&& player1.direction != 'd'*/){
                     player1.posX++;
                     player1.direction = 'd';
                 }
                 break;
             //Player 2
             case 'U': //up
-                if (player2.direction != 'D'){ //opp opp?
+                if (player2.direction != 'D' /*&& player2.direction != 'U'*/){ //opp opp?
                     player2.posY--;
                     player2.direction = 'U';
                 }
                 break;
             case 'L': //left
-                if(player2.direction != 'R'){
+                if(player2.direction != 'R' /*&& player2.direction != 'L'*/){
                     player2.posX--;
                     player2.direction = 'L';
                 }
                 break;
             case 'D': //down
-                if(player2.direction != 'U'){
+                if(player2.direction != 'U'/* &&  player2.direction != 'D'*/){
                     player2.posY++;   
                     player2.direction = 'D';
                 }
                 break;
             case 'R': //right
-                if (player2.direction != 'L'){
+                if (player2.direction != 'L'/* && player2.direction != 'R'*/){
                     player2.posX++;
                     player2.direction = 'R';
                 }
@@ -128,10 +128,10 @@ void play_tron(){
     uint8_t board[width][height]; //me pa q 
     for(int i = 0; i < width;i++) for(int j = 0; j< height; j++)  board[i][j]=0; 
     //uint8_t alive1 = 1, alive2 = 1;
-    uint64_t speed = 3;
+    uint64_t speed = 1;
     uint64_t ticks = sys_getTicks();
     uint64_t lastTicks = 0;
-    while(player1.state /*= isAlive(player1, screen[0], screen[1], board)*/ && player2.state){
+    while(player1.state && player2.state){
         char c = getChar();
         updatePosition(c);
         if (lastTicks != ticks && ticks % speed == 0){ 
@@ -140,49 +140,49 @@ void play_tron(){
             //haces el switch y player1.posY += SIZE ponele
             //board[player1.posY / SIZE][player1.posX / SIZE] = 1;
             //board[player2.posY / SIZE][player2.posX / SIZE] = 1; check q /size da bien!
+            do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
+            do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
             updatePosition(player1.direction);
             updatePosition(player2.direction);
-            do_paintRect((player1.posX)*SIZE, (player1.posY) *SIZE, SIZE, SIZE, player1.color);
-            do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
-            board[player1.posY][player1.posX]=1;
-            board[player2.posY][player2.posX]=1;
+            player1.state = (isAlive(player1, width, height) && !board[player1.posX][player1.posY]);
+            player2.state = (isAlive(player2, width, height)&& !board[player2.posX][player2.posY]);
+            if(player1.state && player2.state){
+                do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
+                do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
+            }
+            board[player1.posX][player1.posY]=1;
+            board[player2.posX][player2.posY]=1;
             lastTicks = ticks;
         }
         ticks = sys_getTicks();
+        
         //hacer syscall que espere n segundos o n ticks para ir imprimiendo
     }
-    
-    /*
-    const int8_t width = (screen[0]-16)/8;
-    const uint8_t height = (screen[1]-16)/8;
-    uint8_t board[width][height];
-    for (int i = 0; i < width; ++i) for (int j = 0; i < height; ++j) board[i][j] = 0;
-    setPlayers(screen[0], screen[1]);
-    uint16_t end = 0;
-    while (1){
-        //lectura d ambos jugadores . pinto posicion
-        //si no choca => pinto
-        // RECORDAR Q SI CHOCA => MUERE
-        // No puede volver hacia atras, el cambio UP.DOWN y LEFT.RIGHT no se pueden hacer
-        if (isAlive(player1, width, height, board) && isAlive(player2, width, height, board) ){ //dentro d parametros y no estaba pintado ya
-            board[(player1.posX/8)-1][(player1.posY/8)-1] = 1;
-            board[(player2.posX/8)-1][(player2.posY/8)-1] = 1;
-            do_paintRect(player1.posX,player1.posY,player1.posX + SIZE, player1.posY + SIZE, player1.color); //xs ys xi yi color
-            do_paintRect(player2.posX,player2.posY,player2.posX + SIZE, player2.posY + SIZE, player2.color);
-        }
-        else{
-            end=0;
-        }
-    }
-    //cdo llegue aca ya termino
-    //ruidito
-    //mensaje de quien gano
-    //clean pantalla
-    Color bg_color = {0x3C, 0xA6, 0x03};
-    do_clearScreen(bg_color);
-    */
     //prompt: want to play again? y/n => n vuelve al menu
-
+    Color black = {0x00, 0x00, 0x00};
+    do_paintRect(0,0,screen[0],screen[1]/SIZE*8,black);
+    do_changeFontSize(2);
+    
+    char c;
+    if(player1.state==1){
+        printf("\n\n\t\t\t\t\t\t\t\t   THE WINNER IS RED\n");
+    }
+    else if(player2.state==1){
+        printf("\n\n\t\t\t\t\t\t\t\t   THE WINNER IS GREEN\n");
+    }
+    else{
+        printf("\t\t\t\t\t\t\t\t   TIE!\n");
+    }
+    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\tor 'p' to play again\n");
+    do_changeFontSize(1);
+    while(c != 'e' && c != 'p'){
+        c = getChar();
+    }
+    
+    if(c == 'p')
+        play_tron();
+    do_clearScreen(black);
+    return;
 }
 
 
@@ -219,3 +219,4 @@ void setPlayers(uint16_t width, uint16_t height){
     //do_paintRect(player2.posX, player2.posY, SIZE, SIZE, orange);            
 }
 
+//
