@@ -181,7 +181,7 @@ void play_tron(){
     printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\tor 'p' to play again\n");
     do_changeFontSize(1);
     while(d != 'e' && d != 'p'){
-        d = getChar();
+        d = do_getChar();
     }
     if(d == 'p'){
         play_tron();
