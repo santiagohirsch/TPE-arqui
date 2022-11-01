@@ -50,6 +50,9 @@ static void do_paintRect(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_
     return sys_paint_rect(fromX, fromY, height, width, color);
 }
 
+static void do_beep(uint64_t frequency, uint64_t seconds){
+    sys_beeper(frequency,seconds);
+}
 //ESTAMOS PONIENDO BOARD COMO B[Y][X] 
 //BOARD NO TIENE LOS BORDES EN CUENTA 
 static int isAlive(Player  p, uint16_t width, uint16_t height) {
@@ -123,39 +126,36 @@ void play_tron(){
     setScreen(screen[0], screen[1]);
     setPlayers(screen[0],screen[1]);
     
-    const uint16_t width = (screen[0]-16)/8 ;
-    const uint16_t height = (screen[1]-16)/8;
-    uint16_t board[width][height]; //me pa q 
-    for(int i = 0; i < width;i++) for(int j = 0; j< height; j++)  board[i][j]=0; 
-    //uint8_t alive1 = 1, alive2 = 1;
+    const uint16_t width = (screen[0]-16)/SIZE; // 16 for blocking borders
+    const uint16_t height = (screen[1]-16)/SIZE;
+    uint16_t board[width][height]; 
+    for(int i = 0; i < width;i++) for(int j = 0; j < height; j++)  board[i][j]=0; 
+
     uint64_t speed = 1;
     uint64_t ticks = sys_getTicks();
     uint64_t lastTicks = 0;
+    
     while(player1.state && player2.state){
         char c = do_getChar();
         updatePosition(c);
-
-        board[player1.posX][player1.posY]=1;
-        board[player2.posX][player2.posY]=1;
         do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
         do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
         if (lastTicks != ticks && ticks % speed == 0){ 
-             //este getchar espera enter 
-            //desps lo vemos pq usa el sys_read y eso tiene para esperar enter
-            //haces el switch y player1.posY += SIZE ponele
-            //board[player1.posY / SIZE][player1.posX / SIZE] = 1;
-            //board[player2.posY / SIZE][player2.posX / SIZE] = 1; check q /size da bien!
+
+            player1.state = (isAlive(player1, width+1, height+1) && !board[player1.posX][player1.posY]);
+            player2.state = (isAlive(player2, width+1, height+1) && !board[player2.posX][player2.posY]);
+            board[player1.posX][player1.posY]=1;
+            board[player2.posX][player2.posY]=1;
+
             updatePosition(player1.direction);
             updatePosition(player2.direction);
-            player1.state = (isAlive(player1, width+1, height+1) && !board[player1.posX][player1.posY]);
-            player2.state = (isAlive(player2, width+1, height+1)&& !board[player2.posX][player2.posY]);
+            
             board[player1.posX][player1.posY]=1;
             board[player2.posX][player2.posY]=1;
             if(player1.state && player2.state){
                 do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
                 do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
             }
-            
             
             lastTicks = ticks;
         }
@@ -167,7 +167,10 @@ void play_tron(){
     Color black = {0x00, 0x00, 0x00};
     do_paintRect(0,0,screen[0],screen[1]/SIZE*8,black);
     do_changeFontSize(2);
-    
+
+    uint64_t freq = 400;
+    uint64_t seconds = 1; // a oido
+    do_beep(freq, seconds);
     char d;
     if(player1.state==1){
         printf("\n\n\t\t\t\t\t\t\t\t   THE WINNER IS RED\n");
@@ -178,17 +181,12 @@ void play_tron(){
     else{
         printf("\t\t\t\t\t\t\t\t   TIE!\n");
     }
-    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\tor 'p' to play again\n");
+    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\t");
     do_changeFontSize(1);
-    while(d != 'e' && d != 'p'){
+    while(d != 'e'){
         d = do_getChar();
     }
-    if(d == 'p'){
-        play_tron();
-        return;
-    } else {
         do_clearScreen(black);
-    }
     
     return;
 }
@@ -211,16 +209,16 @@ void setScreen(uint16_t width, uint16_t height){
 
 void setPlayers(uint16_t width, uint16_t height){
 
-    player1.posX = (width/4)/8;
-    player1.posY = (height/2)/8;
+    player1.posX = (width/4)/SIZE;
+    player1.posY = (height/2)/SIZE;
     player1.direction = 'd'; //hacemos un enum con UP, DOWN, LEFT, RIGHT
     player1.color = red;
     player1.state = 1;
     //do_paintRect(player1.posX, player1.posY, SIZE, SIZE, green);             
     
 
-    player2.posX = (width - width/4)/8;
-    player2.posY = (height/2)/8;
+    player2.posX = (width - width/4)/SIZE;
+    player2.posY = (height/2)/SIZE;
     player2.direction = 'L';
     player2.color = green;
     player2.state = 1;

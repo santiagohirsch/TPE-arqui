@@ -240,6 +240,7 @@ haltcpu:
 	hlt
 	ret
 
+
 SECTION .bss
 	aux resq 1
 	info resq 17

@@ -2,33 +2,18 @@
 #include <inout.h>
 #include <stdint.h>
 
-#define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
-
-int checkMem(char mem[]){
-    uint64_t len = _strlen(mem);
-    //0x........ -> if it matches ^0x[a-fA-F0-9]{16}
-    if (len < 2 || len > 18 || mem[0] != '0' || mem[1] != 'x'){
-        return 0;
-    }
-
-    for (int i = 2; i < len; i++){
-        if (!isHexa(mem[i])){
-            return 0;
-        }
-    }
-    return 1;
-}
 
 int hexStrToInt(char* s, uint8_t **result) {
     int i = 0;
     int len = _strlen(s);
+    printf("len = %d\n", len);
     uint64_t res = 0;
 
     // check if s begins with 0x
     if(*s == '0' || *(s+1) == 'x') i = 2;
 
     // error numero mucho grande
-    if (len - i > 32) return 0;
+    if (len - i > 8) return 0;
 
     for(; i < len; ++i) {
         if (s[i] >= '0' && s[i] <= '9')

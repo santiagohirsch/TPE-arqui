@@ -9,6 +9,7 @@ GLOBAL sys_getScreenData
 GLOBAL sys_paint_rect
 GLOBAL sys_getTicks
 GLOBAL sys_timed_read
+GLOBAL sys_beeper
 
 section .text
 sys_read:
@@ -62,7 +63,8 @@ sys_getTicks:
     int 80h
     ret
 
-sys_timed_read:
+
+sys_beeper:
     mov rax, 0x0A
     int 80h
     ret

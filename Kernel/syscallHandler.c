@@ -5,6 +5,7 @@
 #include <naiveRTC.h>
 #include <naiveGraphicsConsole.h>
 #include <time.h>
+#include <speaker.h>
 #include <interrupts.h>
 
 extern uint64_t info[17];
@@ -66,7 +67,13 @@ static uint64_t sys_ticks_handler(){
     return ticks_elapsed();
 }
 
-static void (* syscalls[]) (uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler, sys_printColor_handler, sys_clear_screen_handler, sys_screenData_handler, sys_paint_rect_handler, sys_ticks_handler};
+static void sys_beeper_handler(uint64_t frequency, uint64_t interval) {
+    beep(frequency);
+    wait(interval);
+    stopBeep();
+}
+
+static void (* syscalls[]) (uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler, sys_printColor_handler, sys_clear_screen_handler, sys_screenData_handler, sys_paint_rect_handler, sys_ticks_handler, sys_beeper_handler};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por rax
 void syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax){

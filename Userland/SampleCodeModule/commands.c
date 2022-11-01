@@ -1,12 +1,20 @@
 #include <stdint.h>
 #include <commands.h>
+#include <colors.h>
+#include <inout.h>
+#define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
+
+Color warningColor = {0x00, 0x10, 0xFF};
+
+
 
 // no params
 void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		printf("Try help without parameters\n");
-		return;
+		do_printColor("ojo al piojo... ", warningColor);
+		printf("help no recibe parametros\n");
 	}
+	// se corre el comando de todas formas
 	
 	const char* helpstring = 
 	"HELP                 Provides help information for commands.\n"
@@ -25,7 +33,8 @@ void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 //no params
 void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		printf("Try divideByZero without parameters\n");
+		do_printColor("ya vas a dividir por cero, no hagas otro error mas... ", warningColor);
+		printf("divideByZero no recibe parametros\n");
 		return;
 	}
 	printf("Divide by Zero\n");
@@ -55,6 +64,21 @@ void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 
 char byteHexToChar(uint8_t value) {
 	return value >= 10 ? (value - 10 + 'A') : (value + '0');
+}
+ 
+static int checkMem(char mem[]){
+    uint64_t len = _strlen(mem);
+    //0x........ -> if it matches ^0x[a-fA-F0-9]{16}
+    if (len < 2 || len > 18 || mem[0] != '0' || mem[1] != 'x'){
+        return 0;
+    }
+
+    for (int i = 2; i < len; i++){
+        if (!isHexa(mem[i])){
+            return 0;
+        }
+    }
+    return 1;
 }
 
 //1 param: memDirec
