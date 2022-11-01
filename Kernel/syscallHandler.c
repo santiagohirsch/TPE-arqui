@@ -10,18 +10,26 @@ extern uint64_t info[17];
 extern uint8_t screenshot;
 
 
-static void sys_write_handler(uint64_t fd, const char * buffer, uint64_t bytes){
+static void sys_write_handler(uint64_t fd, uint64_t buffer, uint64_t bytes){
     if (fd == STDOUT) {
         for (uint64_t i = 0; i < bytes; i++){
-            ngc_printChar(buffer[i]);
+            ngc_printChar(((char*)buffer)[i]);
         }
     }
 }
 
-static void sys_read_handler(unsigned int fd, uint64_t buffer, int bytes){
+static void sys_read_handler(uint64_t fd, uint64_t buffer, uint64_t bytes){
     if (fd != STDIN && fd != KBDIN) return;
     _hlt();
     ((char*)buffer)[0] = getFirstChar();
+/*
+    char c;
+    do {
+        c = getFirstChar();
+    } while (c == 0xFF);
+    
+    ((char*)buffer)[0] = c;
+*/
 }
 
 static uint64_t sys_time_handler(){

@@ -163,7 +163,7 @@ _irq01Handler:
 	pushState
  	mov rax, 0
     in al, 0x60
-	cmp al, 0b00011101 ;me fijo si la tecla es un ctrl
+	cmp al, 0x1D ;me fijo si la tecla es un ctrl
 	jne .continue
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 
 	mov [info+(1*8)], rax
@@ -187,7 +187,7 @@ _irq01Handler:
 	mov byte[screenshot], 1
 	jmp .end
 .continue:
-	cmp al, 0b10011101
+	cmp al, 0x9D	;me fijo si la tecla es un ctrl 
 	je .end
 
 	mov rdi, rax
