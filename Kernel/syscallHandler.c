@@ -22,14 +22,6 @@ static void sys_read_handler(uint64_t fd, uint64_t buffer, uint64_t bytes){
     if (fd != STDIN && fd != KBDIN) return;
     _hlt();
     ((char*)buffer)[0] = getFirstChar();
-/*
-    char c;
-    do {
-        c = getFirstChar();
-    } while (c == 0xFF);
-    
-    ((char*)buffer)[0] = c;
-*/
 }
 
 static uint64_t sys_time_handler(){
