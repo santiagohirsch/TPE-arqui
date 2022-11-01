@@ -22,7 +22,6 @@ int checkMem(char mem[]){
 int hexStrToInt(char* s, uint8_t **result) {
     int i = 0;
     int len = _strlen(s);
-    printf("mem: %s\n",s);
     uint64_t res = 0;
 
     // check if s begins with 0x

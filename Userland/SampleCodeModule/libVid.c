@@ -198,7 +198,7 @@ void putBase(int num, int base){
 		hex[i] = "0123456789ABCDEF"[num % base];
 		i--;
 		num = num/base;
-	}while( num > 0 );
+	}while( i > 0 );
 
 	while( ++i < 13){
 		hex[j++] = hex[i];
