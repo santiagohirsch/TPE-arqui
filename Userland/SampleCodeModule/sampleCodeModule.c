@@ -57,21 +57,18 @@ main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
 	
-	printf("WELCOME! Type \"HELP\" for list\n");
+	printf("WELCOME! Type \"HELP\" for command list\n");
 	while(1){
 			printf("$>");
 			char buff_command[BUFFER_LENGTH] = {0};
 			// command
-			char command[COMMANDS_LENGTH] = {0};
+			char command[BUFFER_LENGTH] = {0};
 			// parametros enviados junto al comando
 			char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
 
 			scan(buff_command, BUFFER_LENGTH); //sys_read de todo
-			
 			int size = parseBuffer(command, parameters, buff_command);
-
 			int idx = findIdxCommand(command);
-
 			if(idx >= 0 ){
 				commands_functions[idx](size,parameters);
 			}
@@ -87,16 +84,16 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 	int i=0, j;
 	//i = bufferidx, commandlength
 	//k = paramsidx
-	while(i<BUFFER_LENGTH && readbuf[i]==' '){
+	while(i < BUFFER_LENGTH && readbuf[i] == ' '){
 		i++;
 	}
-	for( j=0; i<BUFFER_LENGTH && readbuf[i]!=' ' && readbuf[i] != '\0'; i++){
+	for(j = 0; i < BUFFER_LENGTH && readbuf[i] != ' ' && readbuf[i] != '\0'; i++){
 			command[j++] = readbuf[i];
 	}
 
 	int k=0;
 	command[j] = 0;
-	while(i<BUFFER_LENGTH && readbuf[i]==' '){
+	while(i < BUFFER_LENGTH && readbuf[i] == ' '){
 		i++;
 	}
 	if (readbuf[i]=='\0'){
@@ -105,7 +102,7 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 
 	k=1;
 	for(j=0; i<BUFFER_LENGTH;) {
-		if(k>=MAX_PARAMETERS || j>=LENGTH_PARAMETERS)
+		if(k>=MAX_PARAMETERS || j >= LENGTH_PARAMETERS)
 			return -1;
 		//casos: a: estoy en un espacio => aumento k pues termino un param
 		//		 b: estoy en una caracter => o es el ultimo o no
@@ -113,7 +110,7 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 		if(readbuf[i]!=' ') { //estoy en un caracter y hay un siguiente
 			parameters[k-1][j++] = readbuf[i++];
 		}
-		else{
+		else {
 			parameters[k-1][j] = 0;
 			j=0;
 			while(i<BUFFER_LENGTH && readbuf[i]==' '){
@@ -229,9 +226,10 @@ static void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 		if (params[0][0] == '3'){
 			everythingOk = 0;
 			printf("Warning, font size 3 is way too big!\n");
-			printf("Type 'y' if you still want to change the font: ");
-			char ans;
-			scanf("%c",&ans);
+			printf("If you still want to change the font size type 'y', otherwise type 'n'\n");
+			char ans ;
+			while(ans != 'y' && ans != 'n')
+				ans = getChar();
 			if(ans == 'y')
 				everythingOk = 1;
 		}
