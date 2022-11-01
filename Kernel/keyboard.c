@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 
 
 static const uint8_t charHexMap[256] = {       
@@ -40,11 +40,11 @@ void keyboard_handler(uint64_t teclahex){
 
 char getFirstChar(){
     if (qElements == 0) { 
-        return -1; // buffer is empty
+        return 0xFF; // buffer is empty
     }
 
     char toReturn = buffer[readIndex];
-
+    
     // update iterators
     qElements--;
     readIndex++;
