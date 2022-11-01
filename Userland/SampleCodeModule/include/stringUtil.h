@@ -13,7 +13,7 @@ uint64_t getFormat(uint64_t n);
 
 uint64_t itoa(uint64_t number, char* s);
 
-uint64_t hexStrToInt(char* s);
+int hexStrToInt(char* s, uint8_t **result);
 
 int checkMem(char mem[]);
 

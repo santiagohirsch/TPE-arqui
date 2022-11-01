@@ -19,9 +19,10 @@ int checkMem(char mem[]){
     return 1;
 }
 
-uint64_t hexStrToInt(char* s) {
+int hexStrToInt(char* s, uint8_t **result) {
     int i = 0;
     int len = _strlen(s);
+    printf("mem: %s\n",s);
     uint64_t res = 0;
 
     // check if s begins with 0x
@@ -41,8 +42,8 @@ uint64_t hexStrToInt(char* s) {
             res = res*16 + (s[i]-'A'+10);
         
     }
-
-    return res;
+    *result = (uint8_t*)res;
+    return 1;
 }
 
 uint64_t atoi(char S[])
