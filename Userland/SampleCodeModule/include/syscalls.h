@@ -4,7 +4,7 @@
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
-#define KDBIN 3
+#define KBDIN 3
 
 
 void sys_write(uint64_t fd, const char * buffer, uint64_t count);
@@ -15,7 +15,7 @@ uint64_t sys_time();
 
 uint8_t sys_inforeg(uint64_t regVec[17]);
 
-void sys_changeFontSize();
+void sys_changeFontSize(uint64_t level);
 
 void sys_printColor(const char * buffer, uint64_t color);
 
