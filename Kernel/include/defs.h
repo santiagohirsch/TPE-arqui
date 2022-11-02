@@ -18,23 +18,16 @@
 #define ACS_STACK       (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 
 /* Colores para los prints */
-#define BLACK 0	
-#define BLUE 1
-#define GREEN 2
-#define CYAN 3
-#define RED 4
-#define PURPLE 5
-#define BROWN 6
-#define GRAY 7
-#define DARK_GRAY 8
-#define LIGHT_BLUE 9
-#define LIGHT_GREEN 10
-#define LIGHT_CYAN 11	
-#define LIGHT_RED 12	
-#define LIGHT_PURPLE 13	
-#define YELLOW 14	
-#define WHITE 15
-#define DEFAULT (BLACK*16 + GRAY)
+#define WHITE   0xFFFFFF
+#define BLACK   0x000000
+#define GREY    0x7F7F7F
+#define BLUE    0xFFFFFF
+#define GREEN   0x00FF00
+#define RED     0x0000FF
+#define YELLOW  0x00FFFF
+#define CYAN    0xFFFF00
+#define ORANGE  0x00A5FF
+#define PINK    0xCBC0FF  
 
 /* File Descriptors */
 #define STDIN  0

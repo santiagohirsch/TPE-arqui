@@ -3,11 +3,13 @@
 #include <stdint.h>
 
 extern uint64_t getKey();
+
 extern uint64_t tKey();
 
-void keyboard_handler();
-char getLastChar();
-char * getBuffer();
+void keyboard_handler(uint64_t teclahex);
+
+char getFirstChar();
+
 uint64_t getBufferLength();
 
 #endif

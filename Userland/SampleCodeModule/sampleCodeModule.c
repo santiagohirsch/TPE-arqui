@@ -1,78 +1,113 @@
-#include <libVid.h>
+#include <inout.h>
+#include <commands.h>
 #include <stdint.h>
-#include <string.h>
+#include <stringUtil.h>
+#include <tron.h>
+#include <syscalls.h>
+#include <colors.h>
+//le sacamos const por el momento por el warning
+static char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
-#define MAX_PARAMETERS 10
-#define LENGTH_PARAMETERS 20
-#define BUFFER_LENGTH 20
-#define COMMANDS_LENGTH 9
+/*static  char* registerNames[REGISTERS] = {
+    "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
+};*/
+
 
 /* COMMANDS */
-static void help(){
-	/*if(parameters[0][0]!=0){
-		print("Try help without parameters\n");
-		return;
-	}*/
-	
-	const char* helpstring = 
-	"HELP                 Provides help information for commands.\n"
-	"SCREENSHOT           Register's screenshot.\n"
-	"INVALIDOPCODE        Command to verify the operation of the exception routine \"Invalid Opcode\"\n"
-	"DIVIDEBYZERO         Command to verify the operation of the exception routine \"Divide by zero\"\n"
-	"INFOREG              Prints on screen the value of all registers.\n"
-	"PRINTMEM             Receives as argument a pointer and performs a memory dump of 32 bytes from the\n"
-	".                    Address received as an argument.\n"
-	"TIME                 Command to display the system day and time.\n"
-	"CHANGEFONTSIZE       Changes font size.\n"
-	"TRON                 Get ready to play Tron!.\n";
-	print(helpstring);
-}
 
-static void screenshot(){
-	
-}
+static void (*commands_functions[])(int argc, char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS]) = {
+	help, 
+	invalidOPCode, 
+	divideByZero, 
+	inforeg, 
+	printMem, 
+	time, 
+	changeFontSize, 
+	tron, 
+	clearScreen
+};
 
-static void invalidOPCode(){
+static int findIdxCommand(char *buff);
 
-}
-
-static void divideByZero(){ 
-
-}
-
-static void inforeg(){
-	
-}
-
-static void printMem(uint64_t memDirec){
-	
-}
+static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
 
 
-static void time(){
-	
-}
+int 
+main() {
+	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
+	//Es decir printf, scanf, etc
+	do_printColor("WELCOME! Type \"HELP\" for command list\n", WHITE);
+	while(1){
+			printf("$>");
+			char buff_command[BUFFER_LENGTH] = {0};
+			// command
+			char command[BUFFER_LENGTH] = {0};
+			// parametros enviados junto al comando
+			char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS] = {{0}};
 
-
-static void changeFontSize(char setting){
-	
-}
-
-static void tron(){
-	
+			bufferAction(buff_command, BUFFER_LENGTH); //sys_read de todo
+			int size = parseBuffer(command, parameters, buff_command);
+			int idx = findIdxCommand(command);
+			if(idx >= 0 ){
+				commands_functions[idx](size,parameters);
+			}
+			else if (idx == -1){
+				printf("Command not found: try again\n");
+			}
+	}
+	return 0;
 }
 
 
-static const char* commands[] = {"help", "screenshot", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron"};
-static void (*commands_functions[])(char parameters[COMMANDS_LENGTH][LENGTH_PARAMETERS]) = {help, screenshot, invalidOPCode, divideByZero, inforeg, printMem, time, changeFontSize, tron};
+static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]) {
+	int i=0, j;
+	//i = bufferidx, commandlength
+	//k = paramsidx
+	while(i < BUFFER_LENGTH && readbuf[i] == ' '){
+		i++;
+	}
+	for(j = 0; i < BUFFER_LENGTH && readbuf[i] != ' ' && readbuf[i] != '\0'; i++){
+			command[j++] = readbuf[i];
+	}
 
+	int k=0;
+	command[j] = 0;
+	while(i < BUFFER_LENGTH && readbuf[i] == ' '){
+		i++;
+	}
+	if (readbuf[i]=='\0'){
+		return k;
+	}
 
+	k=1;
+	for(j=0; i<BUFFER_LENGTH;) {
+		if(k>=MAX_PARAMETERS || j >= LENGTH_PARAMETERS)
+			return -1;
+		//casos: a: estoy en un espacio => aumento k pues termino un param
+		//		 b: estoy en una caracter => o es el ultimo o no
+		// => si es el ultimo ++k y si no sigo leyendo
+		if(readbuf[i]!=' ') { //estoy en un caracter y hay un siguiente
+			parameters[k-1][j++] = readbuf[i++];
+		}
+		else {
+			parameters[k-1][j] = 0;
+			j=0;
+			while(i<BUFFER_LENGTH && readbuf[i]==' '){
+				i++;
+			}
+			if (readbuf[i]=='\0'){
+				return k;
+			}
+			k++;
+		}
+	}
+	return k;
+}
 
 static int findIdxCommand(char *buff){
 
-	// caso '\n'
-	if (_strlen(buff) == 0) {
-		return -1;
+	if (_strlen(buff) == 0) { //Me pasan un enter suelto
+		return -2;            //Para diferenciar de command not found
 	}
 	
 	for (int i = 0; i < COMMANDS_LENGTH ; i++){
@@ -80,33 +115,5 @@ static int findIdxCommand(char *buff){
 			return i;
 		}
 	}
-	
-	
-	print("Command not found: try again\n");
 	return -1; //command not found
-}
-
-int main() {
-
-	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
-	//Es decir printf, scanf, etc
-
-	print("WELCOME! Type \"HELP\" for list\n");
-	while(1){
-		print("$>");
-		//recepcion de parametros ???????
-		//buffer para ver q comando me manda
-		char buff_command[BUFFER_LENGTH] = {0};
-		
-		scan(buff_command, BUFFER_LENGTH);  
-	
-		// paso a idx (fun aux)
-		int idx = findIdxCommand(buff_command);
-		if (idx==0){
-			help();
-		}
-		
-		  
-	}
-	return 0;
 }

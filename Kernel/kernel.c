@@ -7,6 +7,8 @@
 #include <time.h>
 #include <defs.h>
 #include <naiveGraphicsConsole.h>
+#include <interrupts.h>
+#include <speaker.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -53,11 +55,19 @@ void * initializeKernelBinary()
 
 int main()
 {	
+
 	//carga
 	load_idt();
 
+
+	/*beep(400);
+	for(int i = 0 ; i<30000000 ; i++){
+		;
+	}
+	stopBeep();*/
 	((EntryPoint)sampleCodeModuleAddress)();
 	
+
 	while(1){
 		_hlt(); //espera: instrucc q frena cpu hasta recibir interrup externas (HW)
 	}
