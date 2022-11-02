@@ -164,21 +164,28 @@ void play_tron(){
     uint64_t seconds = 1; // a oido
     do_beep(freq, seconds);
     char d;
-    if(player1.state==1){
-        printf("\n\n\t\t\t\t\t\t\t\t   THE WINNER IS RED\n");
-    }
-    else if(player2.state==1){
-        printf("\n\n\t\t\t\t\t\t\t\t   THE WINNER IS GREEN\n");
+   
+    if(player1.state==1 || player2.state == 1){
+        printf("\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   THE WINNER IS: \n");
+        printf("\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+        do_changeFontSize(3);
+        if(player1.state==1){
+            do_printColor("PLAYER PINK!",PINK);
+        }
+        else if(player2.state==1){
+            do_printColor("PLAYER GREEN!",GREEN);
+        }
+        do_changeFontSize(2);
     }
     else{
-        printf("\t\t\t\t\t\t\t\t   TIE!\n");
+        printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t  IT'S A TIE!\n");
     }
-    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\tor 'p' to play again\n");
+    printf("\n\n\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tWant to play again? Press y/n \n");
     do_changeFontSize(1);
-    while(d != 'e' && d != 'p'){
+    while(d != 'y' && d != 'n'){
         d = do_getChar();
     }
-    if(d == 'p'){
+    if(d == 'y'){
         play_tron();
         return;
     } else {
@@ -190,10 +197,10 @@ void play_tron(){
 
 
 static void paintBorders(uint16_t width, uint16_t height, uint64_t color) {
-    do_paintRect(0, 0, width, SIZE, WHITE);             // top border 
-    do_paintRect(0, 0, SIZE, height, WHITE);            // left border
-    do_paintRect(width-SIZE, 0, SIZE, height, WHITE);   // right bor
-    do_paintRect(0, height-SIZE, width, SIZE, WHITE);   // bottom border
+    do_paintRect(0, 0, width, SIZE, DARKBLUE);             // top border 
+    do_paintRect(0, 0, SIZE, height, DARKBLUE);            // left border
+    do_paintRect(width-SIZE, 0, SIZE, height, DARKBLUE);   // right bor
+    do_paintRect(0, height-SIZE, width, SIZE, DARKBLUE);   // bottom border
 }
 
 //hace la ventana en donde se juega al tron
@@ -209,7 +216,7 @@ void setPlayers(uint16_t width, uint16_t height){
     player1.posX = (width/4)/SIZE;
     player1.posY = (height/2)/SIZE;
     player1.direction = 'd'; //hacemos un enum con UP, DOWN, LEFT, RIGHT
-    player1.color = RED;
+    player1.color = PINK;
     player1.state = 1;
     do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);          
     

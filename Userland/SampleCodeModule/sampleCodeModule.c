@@ -4,6 +4,7 @@
 #include <stringUtil.h>
 #include <tron.h>
 #include <syscalls.h>
+#include <colors.h>
 //le sacamos const por el momento por el warning
 static char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
@@ -35,7 +36,7 @@ int
 main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
-	printf("WELCOME! Type \"HELP\" for command list\n");
+	do_printColor("WELCOME! Type \"HELP\" for command list\n", WHITE);
 	while(1){
 			printf("$>");
 			char buff_command[BUFFER_LENGTH] = {0};
