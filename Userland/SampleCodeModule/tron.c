@@ -2,6 +2,7 @@
 #include <inout.h>
 #include <syscalls.h>
 #include <tron.h>
+#include <colors.h>
 
 #define SIZE 8
 #define MAX_HEIGHT 1280

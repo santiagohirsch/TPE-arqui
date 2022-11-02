@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <commands.h>
 #include <tron.h>
+#include <colors.h>
 
 #define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
 
