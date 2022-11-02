@@ -15,7 +15,14 @@
 #define PINK        0xF813E5
 #define DARKBLUE    0x1A0500//0x78021B
 
-#define SCREEN_TRON  0x671100
+#define CYBER_GRAPE     0x713A53
+#define GLAUCOUSE       0xD88461
+#define TURQUOISE       0xB7C550
+#define HAPPY_MATRIX    0x7F7F00
+#define ICTERINE        0x65FAF0
+
+
+#define SCREEN_TRON  0x3B0A00
 #define TRON_COLOR_1 0x403C19
 #define TRON_COLOR_2 0x02592E
 #define TRON_COLOR_3 0x014021

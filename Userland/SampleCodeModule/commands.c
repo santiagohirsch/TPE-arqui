@@ -2,14 +2,16 @@
 #include <commands.h>
 #include <tron.h>
 #include <colors.h>
+#include <inout.h>
+#include <stringUtil.h>
 
 #define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
 
 // no params
 void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		do_printColor("ojo al piojo... ", RED);
-		printf("help no recibe parametros\n");
+		do_printColor("\tayayay be more careful... ", RED);
+		printf("help does not take any parameters\n");
 	}
 	// se corre el comando de todas formas
 	
@@ -30,8 +32,8 @@ void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 //no params
 void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		do_printColor("ya vas a dividir por cero, no hagas otro error mas... ", RED);
-		printf("divideByZero no recibe parametros\n");
+		do_printColor("\tIf you are already going to divide by zero then try to not commit another error... ", RED);
+		printf("'divideByZero' does not take any parameters\n");
 		return;
 	}
 	printf("Divide by Zero\n");
@@ -41,10 +43,9 @@ void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
 //no params
 void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		printf("Try invalidOpCode without parameters\n");
+		printf("\t'invalidopcode' does not take any parameters\n");
 		return;
 	}
-	printf("Invalid Op Code\n");
 	do_invalidOpCode();
 }
 
@@ -52,11 +53,11 @@ void invalidOPCode(int argc, char  params[][LENGTH_PARAMETERS]){
 //no params
 void inforeg(int argc, char params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		printf("Try inforeg without parameters\n");
+		printf("\try inforeg without parameters\n");
 		return;
 	}
-	printf("info reg\n");
 	do_printInfoReg();
+	return;
 }
 
 char byteHexToChar(uint8_t value) {
@@ -82,21 +83,21 @@ static uint64_t checkMem(char mem[], uint64_t * len){
 void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 	
 	if(argc != 1){
-		printf("Try printMem with one parameter (memDir)\n");
+		printf("\tTry printMem with one parameter (memDir)\n");
 		return;
 	}
 
 	uint64_t len;
 
 	if (!checkMem(params[0], &len)){
-		printf("Remember that memory addresses go with a ");
+		printf("\tRemember that memory addresses go with a ");
 		do_printColor("0x ", CYAN);
 		printf("in front.\n");
 		return;
 	}
 
 	if (len == 2) {
-		printf("We'll check for memory: ");
+		printf("\tWe'll check for memory: ");
 		do_printColor("0x", DARKERCYAN);
 		do_printColor("00\n", CYAN);
 	}
@@ -119,6 +120,7 @@ void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		do_printColor(buffer+2, CYAN);
 	}
 	printf("\n");
+	return;
 }
 
 //1 param: setting
@@ -135,8 +137,8 @@ void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 	if (params[0][0] == '1' || params[0][0] == '2' || params[0][0] == '3' ){
 		if (params[0][0] == '3'){
 			everythingOk = 0;
-			printf("Warning, font size 3 is way too big!\n");
-			printf("If you still want to change the font size type 'y', otherwise type 'n'\n");
+			printf("\tWarning, font size 3 is way too big!\n");
+			printf("\tIf you still want to change the font size type 'y', otherwise type 'n'\n");
 			char ans ;
 			while(ans != 'y' && ans != 'n')
 				ans = do_getChar();
@@ -147,7 +149,7 @@ void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 		
 	}
 	else{
-		printf("Invalid parameter, try with 1, 2 or 3\n");
+		printf("\tInvalid parameter, try with 1, 2 or 3\n");
 	}
 	return;
 }
@@ -155,23 +157,33 @@ void changeFontSize(int argc, char params[][LENGTH_PARAMETERS]){
 //no params
 void time(int argc, char params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		printf("Try time without parameters\n");
+		printf("\tTry time without parameters\n");
 		return;
 	}
-	printf("time\n");
+	printf("\tThis is the current ");
+	do_printColor("time ", TURQUOISE);
+	printf("in the beautiful city of ");
+	do_printColor("GREENWICH: ", HAPPY_MATRIX);
+	do_printColor("(UTC+00)\n", CYBER_GRAPE);
 	char timeBuffer[9];
 	do_getTime(timeBuffer);
-	printf(timeBuffer);
+	printf("\t\t\t");
+	do_printColor(timeBuffer, ICTERINE);
 	printf("\n");
+	printf("\tBuenos Aires is UTC-03:00\n");
+
+	return;
 }
 
 //no params
 void tron(int argc, char params[][LENGTH_PARAMETERS]){
-	if(argc!=0){
+	// tron will run even though it has parameters (not a bug, a feature)
+	/*if(argc!=0){
 		printf("Try tron without parameters\n");
-		return;
-	}
+		
+	}*/
 	play_tron();
+	return;
 }
 
 

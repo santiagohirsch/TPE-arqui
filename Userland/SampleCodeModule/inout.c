@@ -88,7 +88,7 @@ char * getRestOfString(char string[]){
 
 char do_getChar(){
 	char out;
-	sys_read(KDBIN, &out, 1);
+	sys_read(KBDIN, &out, 1);
 	return out;
 }
 
@@ -96,7 +96,7 @@ char do_getChar(){
 void scanf(char * format,...){
 	//lectura del buffer
 	char buffer[MAX_BUFFER];
-	sys_read(KDBIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
+	sys_read(KBDIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
 	//parseamos para poder asignarselo a cada param
 	//primer caracter si o si %
 	if(*format != '%'){
