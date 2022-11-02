@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <commands.h>
-
+#include <tron.h>
 // no params
 void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	if(argc!=0){
@@ -84,10 +84,8 @@ void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 		char  buffer[6] = "0x00 ";
 		buffer[2] = byteHexToChar(mem[i] >> 4);	// first hex value
 		buffer[3] = byteHexToChar(mem[i] & 0x0F);	
-		Color cyan = {0xEE, 0xEE, 0x00};
-		Color darkerCyan = { 0xAA,0xAA,0x00};
-		do_printColor("0x", darkerCyan);
-		do_printColor(buffer+2, cyan);
+		do_printColor("0x", DARKERCYAN);
+		do_printColor(buffer+2, CYAN);
 	}
 	printf("\n");
 }
@@ -147,8 +145,7 @@ void tron(int argc, char params[][LENGTH_PARAMETERS]){
 
 
 void clearScreen(int argc, char params[][LENGTH_PARAMETERS]) {
-	Color color = {0x00, 0x00, 0x00};
-	do_clearScreen(color);
+	do_clearScreen(BLACK);
 	return;
 }
 

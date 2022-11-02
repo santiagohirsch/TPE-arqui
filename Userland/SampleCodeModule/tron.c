@@ -1,35 +1,19 @@
 #include <stdint.h>
-#include <colors.h>
 #include <inout.h>
 #include <syscalls.h>
 #include <tron.h>
+
 #define SIZE 8
+#define MAX_HEIGHT 1280
+#define MAX_WIDTH 1024
 
 typedef struct {
     uint64_t posX;
     uint64_t posY;
     uint8_t direction;
     uint8_t state;
-    Color color;    
+    uint64_t color;    
 } Player;
-
-const Color tronColor1 = {0x40, 0x3C, 0x19};
-const Color tronColor2 = {0x02, 0x59, 0x2E};
-const Color tronColor3 = {0x01, 0x40, 0x21};
-const Color tronColor4 = {0x41, 0x69, 0xD9};
-const Color tronColor5 = {0x1F, 0x2B, 0xA6};
-
-
-const Color white = {0xFF, 0xFF, 0xFF};
-const Color black = {0x00, 0x00, 0x00};
-const Color grey = {0x7F, 0x7F, 0x7F};
-const Color blue = {0xFF, 0x00, 0x00};
-const Color green = {0x00, 0xFF, 0x00};
-const Color red = {0x00, 0x00, 0xFF};
-const Color yellow = {0x00, 0xFF, 0xFF};
-const Color cyan = {0xFF, 0xFF, 0x00};
-const Color orange = {0x00, 0xA5, 0xFF};
-const Color pink = {0xCB, 0xC0, 0xFF};
 
 Player player1;
 Player player2;
@@ -41,19 +25,24 @@ enum DIRECTIONS {
     right
 }Dirs;
 
+uint16_t board[MAX_WIDTH][MAX_HEIGHT];
 
 static void getScreenData(uint16_t * data){ 
     return sys_getScreenData(data);
 }
 
-static void do_paintRect(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, Color color){
+static void do_paintRect(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, uint64_t color){
     return sys_paint_rect(fromX, fromY, height, width, color);
 }
 
 //ESTAMOS PONIENDO BOARD COMO B[Y][X] 
 //BOARD NO TIENE LOS BORDES EN CUENTA 
-static int isAlive(Player  p, uint16_t width, uint16_t height) {
-    return p.posX < width && p.posX > 0 && p.posY < height && p.posY > 0 /*&& board[p.posY][p.posX]==0*/; //chequeo rango
+static int isAlive(Player  p, uint16_t width, uint16_t height,uint16_t board[MAX_WIDTH][MAX_HEIGHT]) {
+    if (p.posX < width && p.posX > 1 && p.posY < height && p.posY > 1 ){/*&& board[p.posY][p.posX]==0*/ //chequeo rango
+        board[p.posX][p.posY]=1;
+        return 1;
+    }
+    return 0;
 }
 
 static void updatePosition(uint64_t keypressed){
@@ -64,24 +53,28 @@ static void updatePosition(uint64_t keypressed){
                 if (player1.direction != 's' /* && player1.direction != 'w'*/){ //opposite 
                     player1.posY--;
                     player1.direction = 'w';
+                    do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
                 }
                 break;
             case 'a':
                 if(player1.direction != 'd' /*&& player1.direction != 'a'*/){
                     player1.posX--;
                     player1.direction = 'a';
+                    do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
                 }
                 break;
             case 's':
                 if(player1.direction != 'w' /*&& player1.direction != 's'*/){
                     player1.posY++;   
                     player1.direction = 's';
+                    do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
                 }
                 break;
             case 'd':
                 if (player1.direction != 'a' /*&& player1.direction != 'd'*/){
                     player1.posX++;
                     player1.direction = 'd';
+                    do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
                 }
                 break;
             //Player 2
@@ -89,24 +82,28 @@ static void updatePosition(uint64_t keypressed){
                 if (player2.direction != 'D' /*&& player2.direction != 'U'*/){ //opp opp?
                     player2.posY--;
                     player2.direction = 'U';
+                    do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
                 }
                 break;
             case 'L': //left
                 if(player2.direction != 'R' /*&& player2.direction != 'L'*/){
                     player2.posX--;
                     player2.direction = 'L';
+                    do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
                 }
                 break;
             case 'D': //down
                 if(player2.direction != 'U'/* &&  player2.direction != 'D'*/){
                     player2.posY++;   
                     player2.direction = 'D';
+                    do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
                 }
                 break;
             case 'R': //right
                 if (player2.direction != 'L'/* && player2.direction != 'R'*/){
                     player2.posX++;
                     player2.direction = 'R';
+                    do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
                 }
                 break;
             }
@@ -125,38 +122,35 @@ void play_tron(){
     
     const uint16_t width = (screen[0]-16)/8 ;
     const uint16_t height = (screen[1]-16)/8;
-    uint16_t board[width][height]; //me pa q 
     for(int i = 0; i < width;i++) for(int j = 0; j< height; j++)  board[i][j]=0; 
     //uint8_t alive1 = 1, alive2 = 1;
     uint64_t speed = 1;
     uint64_t ticks = sys_getTicks();
     uint64_t lastTicks = 0;
-    while(player1.state && player2.state){
-        char c = do_getChar();
-        updatePosition(c);
-
-        board[player1.posX][player1.posY]=1;
-        board[player2.posX][player2.posY]=1;
-        do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
-        do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
-        if (lastTicks != ticks && ticks % speed == 0){ 
-             //este getchar espera enter 
+    char c;
+    char t;
+    while(player1.state && player2.state){  
+        c = do_getChar();
+        t = do_getChar(); 
+        if (lastTicks != ticks && ticks % speed == 0){
+            
+            player1.state = !board[player1.posX][player1.posY] && isAlive(player1, width+1, height+1, board);
+            player2.state = !board[player2.posX][player2.posY] && isAlive(player2, width+1, height+1, board);
+            if (player1.state && player2.state){
+                if(c != player1.direction && c != player2.direction)
+                    updatePosition(c);
+                if(t != player1.direction && t != player2.direction)
+                    updatePosition(t);
+                updatePosition(player1.direction);
+                updatePosition(player2.direction);
+            }
+            
+            
+            
             //desps lo vemos pq usa el sys_read y eso tiene para esperar enter
             //haces el switch y player1.posY += SIZE ponele
             //board[player1.posY / SIZE][player1.posX / SIZE] = 1;
             //board[player2.posY / SIZE][player2.posX / SIZE] = 1; check q /size da bien!
-            updatePosition(player1.direction);
-            updatePosition(player2.direction);
-            player1.state = (isAlive(player1, width+1, height+1) && !board[player1.posX][player1.posY]);
-            player2.state = (isAlive(player2, width+1, height+1)&& !board[player2.posX][player2.posY]);
-            board[player1.posX][player1.posY]=1;
-            board[player2.posX][player2.posY]=1;
-            if(player1.state && player2.state){
-                do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);
-                do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color);
-            }
-            
-            
             lastTicks = ticks;
         }
         ticks = sys_getTicks();
@@ -164,8 +158,7 @@ void play_tron(){
         //hacer syscall que espere n segundos o n ticks para ir imprimiendo
     }
     //prompt: want to play again? y/n => n vuelve al menu
-    Color black = {0x00, 0x00, 0x00};
-    do_paintRect(0,0,screen[0],screen[1]/SIZE*8,black);
+    do_paintRect(0, 0, screen[0], screen[1]/SIZE*8, BLACK);
     do_changeFontSize(2);
     
     char d;
@@ -187,25 +180,25 @@ void play_tron(){
         play_tron();
         return;
     } else {
-        do_clearScreen(black);
+        do_clearScreen(BLACK);
     }
     
     return;
 }
 
 
-static void paintBorders(uint16_t width, uint16_t height, Color color) {
-    do_paintRect(0, 0, width, SIZE, white);             // top border 
-    do_paintRect(0, 0, SIZE, height, white);            // left border
-    do_paintRect(width-SIZE, 0, SIZE, height, white);   // right bor
-    do_paintRect(0, height-SIZE, width, SIZE, white);   // bottom border
+static void paintBorders(uint16_t width, uint16_t height, uint64_t color) {
+    do_paintRect(0, 0, width, SIZE, WHITE);             // top border 
+    do_paintRect(0, 0, SIZE, height, WHITE);            // left border
+    do_paintRect(width-SIZE, 0, SIZE, height, WHITE);   // right bor
+    do_paintRect(0, height-SIZE, width, SIZE, WHITE);   // bottom border
 }
 
 //hace la ventana en donde se juega al tron
 void setScreen(uint16_t width, uint16_t height){
-    Color bg_color = {0x3B, 0x0A, 0x00}; //azul
-    do_clearScreen(bg_color); //pintar pantalla d azul
-    paintBorders(width, height, tronColor3);
+    
+    do_clearScreen(SCREEN_TRON); //pintar pantalla d azul
+    paintBorders(width, height, TRON_COLOR_3);
 }
 
 
@@ -214,17 +207,17 @@ void setPlayers(uint16_t width, uint16_t height){
     player1.posX = (width/4)/8;
     player1.posY = (height/2)/8;
     player1.direction = 'd'; //hacemos un enum con UP, DOWN, LEFT, RIGHT
-    player1.color = red;
+    player1.color = RED;
     player1.state = 1;
-    //do_paintRect(player1.posX, player1.posY, SIZE, SIZE, green);             
+    do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);          
     
 
     player2.posX = (width - width/4)/8;
     player2.posY = (height/2)/8;
     player2.direction = 'L';
-    player2.color = green;
+    player2.color = GREEN;
     player2.state = 1;
-    //do_paintRect(player2.posX, player2.posY, SIZE, SIZE, orange);            
+    do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color); 
 }
 
 //

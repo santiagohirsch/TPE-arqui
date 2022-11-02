@@ -74,12 +74,25 @@ uint16_t ngc_getWidth(){
     return screenData->width;
 }
 
+#define BLUE        0xFF0000
+#define GREEN       0x00FF00
+#define RED         0x0000FF
+
+static void colorIntToColor(uint64_t colorInt, Color* color) {
+    //0xBBGGRR
+    color->b = (colorInt>>16) & 0xFF;
+    color->g = (colorInt>>8) & 0xFF;
+    color->r = colorInt & 0xFF;
+}
+
 static void ngc_setColor(Color newColor){
     penColor = newColor;
 }
 
 
-void ngc_printColor(const char * string, Color color){
+void ngc_printColor(const char * string, uint64_t colorInt){
+    Color color;
+    colorIntToColor(colorInt, &color);
     ngc_setColor(color);
     ngc_print(string);
     Color gray = {0x7F, 0x7F, 0x7F}; //reset to default print color
@@ -210,13 +223,15 @@ void ngc_printNewline(void) {
         memset(dst+len, 0, 3 * (uint64_t)screenData->width * CHAR_HEIGHT*level); 
     }
 }
-void ngc_print_pixel(uint16_t x, uint16_t y, Color color) {
+void ngc_print_pixel(uint16_t x, uint16_t y, uint64_t colorInt) {
     
+    Color color;
+    colorIntToColor(colorInt, &color);
     Color* pos = (Color*) getPtrToPixel(x, y);
     *pos = color;
 }
 
-void ngc_print_pixels(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, Color color) {
+void ngc_print_pixels(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, uint64_t color) {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             ngc_print_pixel(fromX + i, fromY + j, color);
@@ -226,8 +241,9 @@ void ngc_print_pixels(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t h
 
 
 
-void ngc_paint_screen(Color bg_color) {
-
+void ngc_paint_screen(uint64_t bg_colorInt) {
+    Color bg_color;
+    colorIntToColor(bg_colorInt, &bg_color);
     uint8_t* pos = (uint8_t*)((uint64_t)screenData->framebuffer);
     for (uint32_t len = (uint32_t)screenData->width * screenData->height ; len; len--, pos+=3) {
         pos[0] = bg_color.b;

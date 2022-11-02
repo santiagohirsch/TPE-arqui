@@ -1,8 +1,6 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-#include <colors.h>
-
 #define MAX_PARAMETERS 5
 #define LENGTH_PARAMETERS 256
 #define BUFFER_LENGTH 256

@@ -43,11 +43,11 @@ static void sys_font_handler(uint64_t level){
     changeFontSize(level);
 }
 
-static void sys_printColor_handler(const char *buffer, Color color){
+static void sys_printColor_handler(const char *buffer, uint64_t color){
     ngc_printColor(buffer, color);
 }
 
-static void sys_clear_screen_handler(Color color) {
+static void sys_clear_screen_handler(uint64_t color) {
     ngc_paint_screen(color);
 }
 
@@ -58,7 +58,7 @@ static void sys_screenData_handler(uint16_t * data){
     return;
 }
 
-static void sys_paint_rect_handler(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, Color color) {
+static void sys_paint_rect_handler(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_t height, uint64_t color) {
     ngc_print_pixels(fromX, fromY, width, height, color);
 }
 

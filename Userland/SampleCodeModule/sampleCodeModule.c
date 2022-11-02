@@ -2,7 +2,6 @@
 #include <commands.h>
 #include <stdint.h>
 #include <stringUtil.h>
-#include <colors.h>
 #include <tron.h>
 
 //le sacamos const por el momento por el warning

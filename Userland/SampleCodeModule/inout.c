@@ -3,12 +3,11 @@
 #include <inout.h>
 #include <stringUtil.h>
 #include <stdarg.h>
-#include <colors.h>
 #include <exceptions.h>
 
 #define MAX_BUFFER 255
 
-void do_printColor(const char * buffer, Color color){
+void do_printColor(const char * buffer, uint64_t color){
 	sys_printColor(buffer, color);
 }
 
@@ -172,7 +171,7 @@ void do_printInfoReg(){
 }
 
 
-void do_clearScreen(Color color) {
+void do_clearScreen(uint64_t color) {
 	sys_clear_screen(color);	
 }
 
