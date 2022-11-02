@@ -22,7 +22,9 @@
 #define TRON_COLOR_5 0x1F2BA6
 
 void play_tron();
+
 void setPlayers(uint16_t width, uint16_t height);
+
 void setScreen(uint16_t width,uint16_t height);
 
 #endif

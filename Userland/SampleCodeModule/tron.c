@@ -18,12 +18,7 @@ typedef struct {
 Player player1;
 Player player2;
 
-enum DIRECTIONS {
-    up = 0, 
-    down, 
-    left, 
-    right
-}Dirs;
+
 
 uint16_t board[MAX_WIDTH][MAX_HEIGHT];
 
@@ -35,6 +30,9 @@ static void do_paintRect(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_
     return sys_paint_rect(fromX, fromY, height, width, color);
 }
 
+static void do_beep(uint64_t frequency, uint64_t seconds){
+    sys_beeper(frequency,seconds);
+}
 //ESTAMOS PONIENDO BOARD COMO B[Y][X] 
 //BOARD NO TIENE LOS BORDES EN CUENTA 
 static int isAlive(Player  p, uint16_t width, uint16_t height,uint16_t board[MAX_WIDTH][MAX_HEIGHT]) {
@@ -160,7 +158,10 @@ void play_tron(){
     //prompt: want to play again? y/n => n vuelve al menu
     do_paintRect(0, 0, screen[0], screen[1]/SIZE*8, BLACK);
     do_changeFontSize(2);
-    
+
+    uint64_t freq = 400;
+    uint64_t seconds = 1; // a oido
+    do_beep(freq, seconds);
     char d;
     if(player1.state==1){
         printf("\n\n\t\t\t\t\t\t\t\t   THE WINNER IS RED\n");
@@ -171,9 +172,9 @@ void play_tron(){
     else{
         printf("\t\t\t\t\t\t\t\t   TIE!\n");
     }
-    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\tor 'p' to play again\n");
+    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t   Press 'e' to go back to the terminal \n\t\t\t\t\t\t\t\t\t\t");
     do_changeFontSize(1);
-    while(d != 'e' && d != 'p'){
+    while(d != 'e'){
         d = do_getChar();
     }
     if(d == 'p'){
@@ -204,16 +205,16 @@ void setScreen(uint16_t width, uint16_t height){
 
 void setPlayers(uint16_t width, uint16_t height){
 
-    player1.posX = (width/4)/8;
-    player1.posY = (height/2)/8;
+    player1.posX = (width/4)/SIZE;
+    player1.posY = (height/2)/SIZE;
     player1.direction = 'd'; //hacemos un enum con UP, DOWN, LEFT, RIGHT
     player1.color = RED;
     player1.state = 1;
     do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);          
     
 
-    player2.posX = (width - width/4)/8;
-    player2.posY = (height/2)/8;
+    player2.posX = (width - width/4)/SIZE;
+    player2.posY = (height/2)/SIZE;
     player2.direction = 'L';
     player2.color = GREEN;
     player2.state = 1;

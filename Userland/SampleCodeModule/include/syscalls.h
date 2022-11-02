@@ -27,4 +27,6 @@ uint64_t sys_getTicks();
  
 void sys_clear_screen(uint64_t color);
 
+void sys_beeper(uint64_t frequency, uint64_t seconds);
+
 #endif

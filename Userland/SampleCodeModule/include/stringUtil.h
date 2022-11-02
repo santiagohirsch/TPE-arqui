@@ -17,8 +17,6 @@ int strtoi(char * buffer, int * i);
 
 int hexStrToInt(char* s, uint8_t **result);
 
-int checkMem(char mem[]);
-
 uint64_t atoi(char S[]);
 
 #endif

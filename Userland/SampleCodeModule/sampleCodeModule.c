@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stringUtil.h>
 #include <tron.h>
-
+#include <syscalls.h>
 //le sacamos const por el momento por el warning
 static char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
@@ -30,11 +30,11 @@ static int findIdxCommand(char *buff);
 
 static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETERS][LENGTH_PARAMETERS], char readbuf[BUFFER_LENGTH]);
 
+
 int 
 main() {
 	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
 	//Es decir printf, scanf, etc
-	
 	printf("WELCOME! Type \"HELP\" for command list\n");
 	while(1){
 			printf("$>");
