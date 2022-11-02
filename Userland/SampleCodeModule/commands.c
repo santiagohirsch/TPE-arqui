@@ -1,10 +1,13 @@
 #include <stdint.h>
 #include <commands.h>
 #include <tron.h>
+
+#define isHexa(a) ( (((a) >= '0' && (a) <= '9') || ((a) >= 'a' && (a) <= 'f') || ((a) >= 'A' && (a) <= 'F')) ? 1 : 0 )
+
 // no params
 void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		do_printColor("ojo al piojo... ", warningColor);
+		do_printColor("ojo al piojo... ", RED);
 		printf("help no recibe parametros\n");
 	}
 	// se corre el comando de todas formas
@@ -26,7 +29,7 @@ void help(int argc, char params[MAX_PARAMETERS][LENGTH_PARAMETERS]){
 //no params
 void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
 	if(argc!=0){
-		do_printColor("ya vas a dividir por cero, no hagas otro error mas... ", warningColor);
+		do_printColor("ya vas a dividir por cero, no hagas otro error mas... ", RED);
 		printf("divideByZero no recibe parametros\n");
 		return;
 	}
@@ -86,15 +89,15 @@ void printMem(int argc, char params[][LENGTH_PARAMETERS]){
 
 	if (!checkMem(params[0], &len)){
 		printf("Remember that memory addresses go with a ");
-		do_printColor("0x ", cyan);
+		do_printColor("0x ", CYAN);
 		printf("in front.\n");
 		return;
 	}
 
 	if (len == 2) {
 		printf("We'll check for memory: ");
-		do_printColor("0x", darkerCyan);
-		do_printColor("00\n", cyan);
+		do_printColor("0x", DARKERCYAN);
+		do_printColor("00\n", CYAN);
 	}
 
 	// we store in mem the pointer to the first memory we want to print
