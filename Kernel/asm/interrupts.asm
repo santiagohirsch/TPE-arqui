@@ -82,33 +82,40 @@ SECTION .text
 
 
 %macro exceptionHandler 1
-	;pushState
+	; opcion que trae el valor de RIP cuando ocurre la excepcion tomando la direccion de retorno de la interrupcion
+	mov rax, [rsp]
+	mov [regdata], rax			;rip
+	pushState
 	
 	;me guardo los registros para imprimir
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
 
-	mov [regdata + (1*8)], rax
-	mov rax, $;[rsp] ;rip = int return address
-	mov [regdata], rax 
-	mov [regdata + (2*8)], rbx
-	mov [regdata + (3*8)], rcx
-	mov [regdata + (4*8)], rdx
-	mov [regdata + (5*8)], rsi
-	mov [regdata + (6*8)], rdi
-	mov [regdata + (7*8)], rbp
+	mov [regdata + (1*8)], rax	;rax
+
+	; opcion que veníamos haciendo
+	; mov rax, $
+
+	
+	
+	mov [regdata + (2*8)], rbx	;rbx
+	mov [regdata + (3*8)], rcx	;rbx
+	mov [regdata + (4*8)], rdx	;rdx
+	mov [regdata + (5*8)], rsi	;rsi
+	mov [regdata + (6*8)], rdi	;rdi
+	mov [regdata + (7*8)], rbp	;rbp
 	mov rax, rsp ; We get the value of RSP 
 	add rax, 0x28 ; We add bytes in order to compensate for the values pushed since the exception occurred and called the exception handler
-	mov [regdata + (8*8)], rax;rsp
-	mov [regdata + (9*8)], r8
-	mov [regdata + (10*8)], r9
-	mov [regdata + (11*8)], r10
-	mov [regdata + (12*8)], r11
-	mov [regdata + (13*8)], r12
-	mov [regdata + (14*8)], r13
-	mov [regdata + (15*8)], r14
-	mov [regdata + (16*8)], r15
+	mov [regdata + (8*8)], rax	;rsp
+	mov [regdata + (9*8)], r8	;r8
+	mov [regdata + (10*8)], r9	;r9
+	mov [regdata + (11*8)], r10	;r10
+	mov [regdata + (12*8)], r11	;r11
+	mov [regdata + (13*8)], r12	;r12
+	mov [regdata + (14*8)], r13	;r13
+	mov [regdata + (15*8)], r14	;r14
+	mov [regdata + (16*8)], r15	;r15
 	mov rax, [rsp+8] ; We get the value of RFLAGS (it is pushed when an interrupt occurs).
-	mov [regdata + (17*8)], rax
+	mov [regdata + (17*8)], rax	;rflags
 
 	
 	
@@ -118,8 +125,8 @@ SECTION .text
 	mov rsi, regdata
 	call exceptionDispatcher
 
-	;popState
-	;iretq
+	popState
+	iretq
 %endmacro
 
 
@@ -138,15 +145,15 @@ _sti:
 	ret
 
 picMasterMask:
-	push rbp
+	push	rbp
     mov rbp, rsp   
     mov ax, di
     out	21h,al
-    pop rbp
+    pop		rbp
     retn
 
 picSlaveMask:
-	push    rbp
+	push	rbp
     mov     rbp, rsp
     mov     ax, di  ; ax = mascara de 16 bits
     out		0A1h, al
@@ -160,15 +167,17 @@ _irq00Handler: irqHandlerMaster 0
 ;Keyboard
 _irq01Handler:
 	;irqHandlerMaster 1
+	mov [info+(1*8)], rax	;rax
+	mov rax, [rsp]
+	mov [info], rax			;rip
 	pushState
+
  	mov rax, 0
     in al, 0x60
 	cmp al, 0x1D ;me fijo si la tecla es un ctrl
 	jne .continue
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 
-	mov [info+(1*8)], rax
-	mov rax, $
-	mov [info], rax ;rip
+
 	mov [info+(2*8)], rbx
 	mov [info+(3*8)], rcx
 	mov [info+(4*8)], rdx
@@ -187,7 +196,7 @@ _irq01Handler:
 	mov byte[screenshot], 1
 	jmp .end
 .continue:
-	cmp al, 0x9D	;me fijo si la tecla es un ctrl 
+	cmp al, 0x9D	;me fijo si la tecla es un ctrl release
 	je .end
 
 	mov rdi, rax
