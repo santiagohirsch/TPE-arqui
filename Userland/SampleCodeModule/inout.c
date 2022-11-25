@@ -88,15 +88,18 @@ char * getRestOfString(char string[]){
 
 char do_getChar(){
 	char out;
-	sys_read(KBDIN, &out, 1);
-	return out;
+    while(sys_read(STDIN, &out, 1) == 0);
+    return out;
 }
 
 //en fmt nos pasa formato ... nos van a mandar las variables a dnd asignar
 void scanf(char * format,...){
 	//lectura del buffer
 	char buffer[MAX_BUFFER];
-	sys_read(KBDIN, buffer, MAX_BUFFER); //agarra de mas, habria q hacer q lea hasta q termine ??
+	if(sys_read(KBDIN, buffer, MAX_BUFFER) == -1) { //agarra de mas, habria q hacer q lea hasta q termine ??
+		return;
+	}
+
 	//parseamos para poder asignarselo a cada param
 	//primer caracter si o si %
 	if(*format != '%'){

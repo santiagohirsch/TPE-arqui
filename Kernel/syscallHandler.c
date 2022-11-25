@@ -11,6 +11,8 @@
 extern uint64_t info[17];
 extern uint8_t screenshot;
 
+typedef int64_t (*syscallT) (uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
+
 static void sys_write_handler(uint64_t fd, uint64_t buffer, uint64_t bytes){
     if (fd == STDOUT) {
         for (uint64_t i = 0; i < bytes; i++){
@@ -19,10 +21,15 @@ static void sys_write_handler(uint64_t fd, uint64_t buffer, uint64_t bytes){
     }
 }
 
-static void sys_read_handler(uint64_t fd, uint64_t buffer, uint64_t bytes){
-    if (fd != STDIN && fd != KBDIN) return;
-    _hlt();
-    ((char*)buffer)[0] = getFirstChar();
+static int64_t sys_read_handler(uint64_t fd, char * buffer, uint64_t bytes){
+    if (fd != STDIN && fd != KBDIN) return -1;
+    int64_t i = 0;
+    char c;
+    while(i < bytes && (c = getFirstChar()) != 0xFF) {
+        buffer[i] = c;
+        i++;
+    }
+    return i;
 }
 
 static uint64_t sys_time_handler(){
@@ -73,10 +80,22 @@ static void sys_beeper_handler(uint64_t frequency, uint64_t interval) {
     stopBeep();
 }
 
-static void (* syscalls[]) (uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax) = {sys_read_handler, sys_write_handler, sys_time_handler, sys_inforeg_handler, sys_font_handler, sys_printColor_handler, sys_clear_screen_handler, sys_screenData_handler, sys_paint_rect_handler, sys_ticks_handler, sys_beeper_handler};
+static syscallT syscalls[]  = {
+    (syscallT) sys_read_handler, 
+    (syscallT) sys_write_handler, 
+    (syscallT) sys_time_handler, 
+    (syscallT) sys_inforeg_handler, 
+    (syscallT) sys_font_handler, 
+    (syscallT) sys_printColor_handler, 
+    (syscallT) sys_clear_screen_handler, 
+    (syscallT) sys_screenData_handler, 
+    (syscallT) sys_paint_rect_handler, 
+    (syscallT) sys_ticks_handler, 
+    (syscallT) sys_beeper_handler
+};
 
 //  paso syscall_id por rax, se come r10 por rcx, y r9 por rax
-void syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax){
-    syscalls[rax](rdi, rsi, rdx, rcx, r8);
+int64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, uint64_t rax){
+    return syscalls[rax](rdi, rsi, rdx, rcx, r8);
 }
 

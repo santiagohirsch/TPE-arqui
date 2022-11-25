@@ -65,6 +65,40 @@ SECTION .text
 	pop rax
 %endmacro
 
+%macro pushStateNoRax 0
+	push rbx
+	push rcx
+	push rdx
+	push rbp
+	push rdi
+	push rsi
+	push r8
+	push r9
+	push r10
+	push r11
+	push r12
+	push r13
+	push r14
+	push r15
+%endmacro
+
+%macro popStateNoRax 0
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop r11
+	pop r10
+	pop r9
+	pop r8
+	pop rsi
+	pop rdi
+	pop rbp
+	pop rdx
+	pop rcx
+	pop rbx
+%endmacro
+
 %macro irqHandlerMaster 1
 	pushState
 
@@ -92,7 +126,7 @@ SECTION .text
 
 	mov [regdata + (1*8)], rax	;rax
 
-	; opcion que veníamos haciendo
+	; opcion que venï¿½amos haciendo
 	; mov rax, $
 
 	
@@ -167,17 +201,18 @@ _irq00Handler: irqHandlerMaster 0
 ;Keyboard
 _irq01Handler:
 	;irqHandlerMaster 1
-	mov [info+(1*8)], rax	;rax
-	mov rax, [rsp]
-	mov [info], rax			;rip
 	pushState
-
  	mov rax, 0
     in al, 0x60
 	cmp al, 0x1D ;me fijo si la tecla es un ctrl
 	jne .continue
+	popState
+	pushState
+.saveRegs:
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15 
-
+	mov [info+(1*8)], rax	;rax
+	mov rax, [rsp+(15*8)]
+	mov [info], rax			;rip
 	mov [info+(2*8)], rbx
 	mov [info+(3*8)], rcx
 	mov [info+(4*8)], rdx
@@ -204,6 +239,7 @@ _irq01Handler:
 .end:
 	mov al, 20h
 	out 20h, al
+
 	popState
 	iretq
 	
@@ -223,16 +259,15 @@ _irq05Handler: irqHandlerMaster 5
 
 ;Syscall
 _irq80Handler:
+	pushStateNoRax
 	;Syscall params: rdi rsi rdx r10 r8	r9
 	;C params: rdi rsi rdx rcx r8 r9
-	push rbp
-	mov rbp, rsp
+
 	mov rcx, r10
 	mov r9, rax
 	call syscallDispatcher
 	
-	mov rsp, rbp
-	pop rbp
+	popStateNoRax
 	iretq
 
 ;Zero Division Exception
