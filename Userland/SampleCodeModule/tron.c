@@ -128,10 +128,10 @@ void play_tron(){
     char c;
     char t;
     while(player1.state && player2.state){
-        c = do_getChar();
-        t = do_getChar(); 
+         
         if (lastTicks != ticks && ticks % speed == 0){
-
+            c = do_getChar();
+            t = do_getChar();
             if (player1.state && player2.state){
                 if(c != player1.direction && c != player2.direction)
                 updatePosition(c);
@@ -225,4 +225,3 @@ void setPlayers(uint16_t width, uint16_t height){
     do_paintRect((player2.posX)*SIZE, (player2.posY)*SIZE, SIZE, SIZE, player2.color); 
 }
 
-//
