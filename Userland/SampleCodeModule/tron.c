@@ -32,8 +32,8 @@ static void do_paintRect(uint64_t fromX, uint64_t fromY, uint16_t width, uint16_
     return sys_paint_rect(fromX, fromY, height, width, color);
 }
 
-static void do_beep(uint64_t frequency, uint64_t seconds){
-    sys_beeper(frequency,seconds);
+static void do_beep(uint64_t frequency, uint64_t nanoSeconds){
+    sys_beeper(frequency, nanoSeconds);
 }
 //ESTAMOS PONIENDO BOARD COMO B[Y][X] 
 //BOARD NO TIENE LOS BORDES EN CUENTA 
