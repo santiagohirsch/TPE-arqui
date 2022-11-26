@@ -4,6 +4,7 @@
 #include <tron.h>
 #include <colors.h>
 
+
 #define SIZE 8
 #define MAX_HEIGHT 1280
 #define MAX_WIDTH 1024
@@ -128,33 +129,30 @@ void play_tron(){
     uint64_t lastTicks = 0;
     char c;
     char t;
-    while(player1.state && player2.state){  
+    while(player1.state && player2.state){
         c = do_getChar();
         t = do_getChar(); 
         if (lastTicks != ticks && ticks % speed == 0){
-            
-            player1.state = !board[player1.posX][player1.posY] && isAlive(player1, width+1, height+1, board);
-            player2.state = !board[player2.posX][player2.posY] && isAlive(player2, width+1, height+1, board);
+
             if (player1.state && player2.state){
                 if(c != player1.direction && c != player2.direction)
-                    updatePosition(c);
+                updatePosition(c);
                 if(t != player1.direction && t != player2.direction)
-                    updatePosition(t);
+                updatePosition(t);
                 updatePosition(player1.direction);
                 updatePosition(player2.direction);
             }
-            
-            
-            
-            //desps lo vemos pq usa el sys_read y eso tiene para esperar enter
-            //haces el switch y player1.posY += SIZE ponele
-            //board[player1.posY / SIZE][player1.posX / SIZE] = 1;
-            //board[player2.posY / SIZE][player2.posX / SIZE] = 1; check q /size da bien!
+            if(player1.posX == player2.posX && player2.posY == player1.posY){ //Choque de frente!!
+                player1.state = 0;
+                player2.state = 0;
+            } else {
+                player2.state = !board[player2.posX][player2.posY] && isAlive(player2, width+1, height+1, board);
+                player1.state = !board[player1.posX][player1.posY] && isAlive(player1, width+1, height+1, board);
+            }
             lastTicks = ticks;
         }
         ticks = sys_getTicks();
-        
-        //hacer syscall que espere n segundos o n ticks para ir imprimiendo
+
     }
     //prompt: want to play again? y/n => n vuelve al menu
     do_paintRect(0, 0, screen[0], screen[1]/SIZE*8, BLACK);

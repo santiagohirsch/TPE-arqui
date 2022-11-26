@@ -117,14 +117,13 @@ SECTION .text
 
 %macro exceptionHandler 1
 	; opcion que trae el valor de RIP cuando ocurre la excepcion tomando la direccion de retorno de la interrupcion
+	mov [regdata + (1*8)], rax	;rax
 	mov rax, [rsp]
 	mov [regdata], rax			;rip
 	pushState
 	
 	;me guardo los registros para imprimir
 	;Guardo: rip, rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15, rflags
-
-	mov [regdata + (1*8)], rax	;rax
 
 	; opcion que ven�amos haciendo
 	; mov rax, $
