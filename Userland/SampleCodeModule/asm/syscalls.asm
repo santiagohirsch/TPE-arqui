@@ -29,7 +29,6 @@ sys_time:
 
 sys_inforeg:
     mov rax, 0x03
-    ;mov rsi, $      ; en rsp esta el valor de retorno: rip DEL USERLAND
     int 80h
     ret
 
