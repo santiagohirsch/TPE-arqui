@@ -1,4 +1,5 @@
 #include <time.h>
+#include <stdint.h>
 
 static unsigned long ticks = 0;
 
@@ -15,7 +16,7 @@ int seconds_elapsed() {
 }
 
 void wait(uint64_t interval) {
-	for (int i=0; i<30000000;i++){
+	for (int i=0; i<interval;i++){
 		;
 	}/*
 	int currentSeconds = seconds_elapsed();

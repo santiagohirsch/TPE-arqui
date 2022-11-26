@@ -1,5 +1,4 @@
 GLOBAL cpuVendor
-GLOBAL sys_write
 section .text
 	
 cpuVendor:
@@ -25,12 +24,3 @@ cpuVendor:
 	mov rsp, rbp
 	pop rbp
 	ret
-
-sys_write:
-	push rbp
-    mov rbp, rsp   
-    mov rax, 1
-	int 80h
-	mov rsp, rbp
-	pop rbp
-    ret

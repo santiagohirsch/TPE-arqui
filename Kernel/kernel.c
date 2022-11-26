@@ -59,12 +59,6 @@ int main()
 	//carga
 	load_idt();
 
-
-	/*beep(400);
-	for(int i = 0 ; i<30000000 ; i++){
-		;
-	}
-	stopBeep();*/
 	((EntryPoint)sampleCodeModuleAddress)();
 	
 

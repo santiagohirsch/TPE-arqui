@@ -113,17 +113,15 @@ static void updatePosition(uint64_t keypressed){
 
 //ejecuta el tron
 void play_tron(){
-//recordar d bloquear el resto tel teclado
     //seteamos pantalla -> players -> lectura para teclado (wasd player1 y flechas player2) -> 
-    uint16_t screen[2] = {0}; //syscall que nos da los datos de la pantalla . por el momento 0 = width y 1 = height
-    getScreenData(screen);
+    uint16_t screen[2] = {0}; 
+    getScreenData(screen); //syscall que nos da los datos de la pantalla . por el momento 0 = width y 1 = height
     setScreen(screen[0], screen[1]);
     setPlayers(screen[0],screen[1]);
     
     const uint16_t width = (screen[0]-16)/8 ;
     const uint16_t height = (screen[1]-16)/8;
     for(int i = 0; i < width;i++) for(int j = 0; j< height; j++)  board[i][j]=0; 
-    //uint8_t alive1 = 1, alive2 = 1;
     uint64_t speed = 1;
     uint64_t ticks = sys_getTicks();
     uint64_t lastTicks = 0;
@@ -159,8 +157,8 @@ void play_tron(){
     do_changeFontSize(2);
 
     uint64_t freq = 400;
-    uint64_t seconds = 1; // a oido
-    do_beep(freq, seconds);
+    uint64_t nanoSeconds = 30000000; //30000000 nanoseconds = 0.03 seconds
+    do_beep(freq, nanoSeconds);
     char d;
    
     if(player1.state==1 || player2.state == 1){
@@ -213,7 +211,7 @@ void setPlayers(uint16_t width, uint16_t height){
 
     player1.posX = (width/4)/SIZE;
     player1.posY = (height/2)/SIZE;
-    player1.direction = 'd'; //hacemos un enum con UP, DOWN, LEFT, RIGHT
+    player1.direction = 'd'; 
     player1.color = PINK;
     player1.state = 1;
     do_paintRect((player1.posX)*SIZE, (player1.posY)*SIZE, SIZE, SIZE, player1.color);          

@@ -15,7 +15,6 @@ static const uint8_t charHexMap[256] = {
     0,     0,     0,    0,      0,      0,      0,      0,         'U'/*up*/,
     0,      0,      'L'/*left*/,    0,     'R'/*right*/,     0,      0,      'D'/*down*/,      0,
 };
-//flechas: arriba abajo der izq para probar
 
 static uint8_t buffer[BUFFER_SIZE] = {0};
 static uint64_t qElements = 0;

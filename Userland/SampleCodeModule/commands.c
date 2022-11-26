@@ -36,7 +36,6 @@ void divideByZero(int argc, char  params[][LENGTH_PARAMETERS]){
 		printf("'divideByZero' does not take any parameters\n");
 		return;
 	}
-	printf("Divide by Zero\n");
 	do_divisionByZero();
 }
 

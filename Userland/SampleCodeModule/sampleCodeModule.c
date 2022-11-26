@@ -8,9 +8,6 @@
 //le sacamos const por el momento por el warning
 static char* commands[] = {"help", "invalidopcode", "dividebyzero", "inforeg", "printmem", "time", "changefontsize", "tron", "clear"};
 
-/*static  char* registerNames[REGISTERS] = {
-    "rip", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rbp", "rsp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
-};*/
 
 
 /* COMMANDS */
@@ -34,8 +31,6 @@ static int parseBuffer(char command[BUFFER_LENGTH], char parameters[MAX_PARAMETE
 
 int 
 main() {
-	//Por ahora nos manejamos con syscalls pero habria que implementar la lib de C
-	//Es decir printf, scanf, etc
 	do_printColor("WELCOME! Type \"HELP\" for command list\n", WHITE);
 	while(1){
 			printf("$>");
@@ -52,7 +47,7 @@ main() {
 				commands_functions[idx](size,parameters);
 			}
 			else if (idx == -1){
-				printf("Command not found: try again\n");
+				do_printColor("Command not found: try again\n", RED);
 			}
 	}
 	return 0;
