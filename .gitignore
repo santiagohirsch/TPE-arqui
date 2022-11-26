@@ -4,6 +4,7 @@
 # Ignora archivos de configuración de Visual Studio Community
 .vscode
 .vs
+*VesaFontMaker.sln
 
 # Ignora .bash_history
 .bash_history
@@ -18,5 +19,10 @@
 *.qcow2
 *.vmdk
 
+# Ignora los archivos de congifuración de GDB
+.gdbinit
+.gdb_history
+kernel.elf
+0000-sampleCodeModule.elf
 
 VesaFontMaker
